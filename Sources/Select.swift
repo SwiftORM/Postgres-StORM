@@ -13,11 +13,15 @@ import PostgreSQL
 extension PostgresConnect {
 
 	public func select(
-		table: String,
-		cols: [String],
-		whereclause: String,
-		vals: [Any],
-		orderby: [String]
+		table:			String,
+		cols:			[String],
+		whereclause:	String,
+		vals:			[Any],
+		orderby:		[String],
+		cursor:			PerfectCRUDCursor,
+		joins:			[DataSourceJoin] = [],
+		having:			[String] = [],
+		groupBy:		[String] = []
 		) -> [Any] {
 
 		
