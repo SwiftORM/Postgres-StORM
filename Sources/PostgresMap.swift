@@ -1,0 +1,31 @@
+//
+//  PostgresMap.swift
+//  PerfectPostgresCRUD
+//
+//  Created by Jonathan Guthrie on 2016-09-24.
+//
+//
+
+import Foundation
+
+public func PostgresMap(_ i: Int) -> String {
+	switch i {
+	case 16: return "Bool"
+	case 20: return "Int"
+	case 21: return "Int"
+	case 23: return "Int"
+	case 25: return "String"
+	case 114: return "json"
+	case 142: return "xml"
+	case 700: return "float"
+	case 701: return "float"
+	case 1043: return "String"
+	case 1082: return "date"
+	case 1083: return "time"
+	case 1114: return "timestamp"
+	case 1184: return "timestampz"
+	case 3802: return "jsonb"
+
+	default: return "Invalid"
+	}
+}
