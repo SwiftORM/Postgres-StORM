@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import PerfectCRUD
+import StORM
 import PostgreSQL
 
 extension PostgresConnect {
@@ -18,11 +18,11 @@ extension PostgresConnect {
 		whereclause:	String,
 		vals:			[Any],
 		orderby:		[String],
-		cursor:			PerfectCRUDCursor = PerfectCRUDCursor(),
+		cursor:			StORMCursor = StORMCursor(),
 		joins:			[DataSourceJoin] = [],
 		having:			[String] = [],
 		groupBy:		[String] = []
-		) -> PerfectResultSet {
+		) -> StORMResultSet {
 		self.table = table
 
 		let clauseCount = "COUNT(*) AS counter"
@@ -46,7 +46,7 @@ extension PostgresConnect {
 
 
 		let getCount = execRows("SELECT \(clauseCount) FROM \(table) \(clauseWhere)", params: valsString)
-		rows.cursorData = PerfectCRUDCursor(
+		rows.cursorData = StORMCursor(
 			limit: cursor.limit,
 			offset: cursor.offset,
 			totalRecords: getCount.first!.data["counter"]! as! Int)

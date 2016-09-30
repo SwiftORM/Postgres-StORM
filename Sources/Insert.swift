@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import PerfectCRUD
+import StORM
 import PostgreSQL
 
 extension PostgresConnect {

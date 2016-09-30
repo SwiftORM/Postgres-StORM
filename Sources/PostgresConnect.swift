@@ -7,14 +7,14 @@
 //
 
 import Foundation
-import PerfectCRUD
+import StORM
 import PostgreSQL
 
 class PostgresConnect: Connect {
 	// server connection
 	
 	private let server = PGConnection()
-	public var rows = PerfectResultSet()
+	public var rows = StORMResultSet()
 
 
 	/// Init with no credentials
@@ -63,7 +63,7 @@ class PostgresConnect: Connect {
 
 	// Internal function which executes statements, with parameter binding
 	// Returns a processed row set
-	func execRows(_ statement: String, params: [String]) -> [PerfectRow] {
+	func execRows(_ statement: String, params: [String]) -> [StORMRow] {
 		self.connect()
 		defer { server.close() }
 		self.statement = statement
@@ -78,8 +78,8 @@ class PostgresConnect: Connect {
 
 
 extension PostgresConnect {
-	fileprivate func parseRows(_ result: PGResult) -> [PerfectRow] {
-		var resultRows = [PerfectRow]()
+	fileprivate func parseRows(_ result: PGResult) -> [StORMRow] {
+		var resultRows = [StORMRow]()
 
 		let num = result.numTuples()
 
@@ -108,7 +108,7 @@ extension PostgresConnect {
 				}
 
 			}
-			let thisRow = PerfectRow()
+			let thisRow = StORMRow()
 			thisRow.data = vals
 			resultRows.append(thisRow)
 		}
