@@ -1,12 +1,17 @@
 //
 //  main.swift
-//  PerfectCRUD
+//  PostgresStORM
 //
 //  Created by Jonathan Guthrie on 2016-09-23.
 //
 //
 
-var connect = PostgresConnect(host: "localhost", username: "perfect", password: "perfect", database: "github_stats", port: 32768)
+var connect = PostgresConnect(
+	host: "localhost",
+	username: "perfect",
+	password: "perfect",
+	database: "github_stats",
+	port: 32768)
 print("PostgresConnect.datasource: \(connect.datasource)")
 
 //github_stats
