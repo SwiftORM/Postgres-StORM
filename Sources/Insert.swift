@@ -13,6 +13,7 @@ import PostgreSQL
 extension PostgresConnect {
 
 	public func insert(table: String, cols: [String], vals: [Any]) {
+		self.table = table
 		// PostgreSQL specific insert staement exec
 		var valsString = [String]()
 		var substString = [String]()

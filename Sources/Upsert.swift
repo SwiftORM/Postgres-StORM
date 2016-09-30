@@ -14,6 +14,8 @@ import PostgreSQL
 extension PostgresConnect {
 	
 	public func upsert(table: String, cols: [String], vals: [Any], conflictkeys: [String]) {
+		self.table = table
+		
 		// PostgreSQL specific insert staement exec
 		var valsString = [String]()
 		var substString = [String]()

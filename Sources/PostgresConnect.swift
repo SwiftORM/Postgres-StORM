@@ -12,7 +12,10 @@ import PostgreSQL
 
 class PostgresConnect: Connect {
 	// server connection
+	
 	private let server = PGConnection()
+	public var rows = PerfectResultSet()
+
 
 	/// Init with no credentials
 	override init() {
@@ -21,13 +24,16 @@ class PostgresConnect: Connect {
 	}
 
 	/// Init with credentials
-	override init(_	ds: DataSource,
+	public init(
 	            host: String,
 	            username: String = "",
 	            password: String = "",
+	            database: String = "",
 	            port: Int = 0) {
 		super.init()
+		self.database = database
 		self.datasource = .Postgres
+		self.credentials = DataSourceCredentials(host: host, port: port, user: username, pass: password)
 	}
 
 	// Connection String
@@ -37,24 +43,43 @@ class PostgresConnect: Connect {
 
 	// Initiates the connection
 	private func connect() {
-		let _ = server.connectdb(self.connectionString())
+		let status = server.connectdb(self.connectionString())
+		if status != .ok {
+			print(status)
+			resultCode = .database
+		} else {
+			resultCode = .noError
+		}
 	}
 
 	// Internal function which executes statements, with parameter binding
 	// Returns raw result
 	func exec(_ statement: String, params: [String]) -> PGResult {
 		self.connect()
+		defer { server.close() }
+		self.statement = statement
 		return server.exec(statement: statement, params: params)
 	}
 
 	// Internal function which executes statements, with parameter binding
 	// Returns a processed row set
-	func execRows(_ statement: String, params: [String]) -> [Any] {
+	func execRows(_ statement: String, params: [String]) -> [PerfectRow] {
 		self.connect()
 		defer { server.close() }
+		self.statement = statement
 		let result = server.exec(statement: statement, params: params )
+		let resultRows = parseRows(result)
+		result.clear()
+		return resultRows
+	}
 
-		var rows = [(Any)]()
+
+}
+
+
+extension PostgresConnect {
+	fileprivate func parseRows(_ result: PGResult) -> [PerfectRow] {
+		var resultRows = [PerfectRow]()
 
 		let num = result.numTuples()
 
@@ -70,27 +95,23 @@ class PostgresConnect: Connect {
 					vals[result.fieldName(index: f)!] = result.getFieldBool(tupleIndex: x, fieldIndex: f)
 				case "String":
 					vals[result.fieldName(index: f)!] = result.getFieldString(tupleIndex: x, fieldIndex: f)
-				// json
-				// xml
-				// float
-				// date
-				// time
-				// timestamp
-				// timestampz
+					// json
+					// xml
+					// float
+					// date
+					// time
+					// timestamp
+					// timestampz
 				// jsonb
 				default:
 					vals[result.fieldName(index: f)!] = result.getFieldString(tupleIndex: x, fieldIndex: f)
 				}
 
 			}
-			rows.append(vals)
+			let thisRow = PerfectRow()
+			thisRow.data = vals
+			resultRows.append(thisRow)
 		}
-		result.clear()
-		return rows
+		return resultRows
 	}
-
-
-
-
-
 }

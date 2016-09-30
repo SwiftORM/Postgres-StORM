@@ -21,6 +21,7 @@ extension PostgresConnect {
 						idName: String = "id",
 						limit: Int = 1
 		) -> Bool {
+		self.table = table
 
 		// PostgreSQL specific insert staement exec
 		var valsString = [String]()
@@ -44,6 +45,7 @@ extension PostgresConnect {
 	                   idName: String = "id",
 	                   limit: Int = 1
 		) -> Bool {
+		self.table = table
 
 		// PostgreSQL specific insert staement exec
 //		var valsString = [String]()
