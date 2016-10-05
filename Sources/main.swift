@@ -12,63 +12,101 @@ var connect = PostgresConnect(
 	host: "localhost",
 	username: "perfect",
 	password: "perfect",
-	database: "github_stats",
+	database: "perfect_testing",
 	port: 32768
 )
 
 
-class StatsTesting: PostgresStORM {
-
+class User: PostgresStORM {
+	// NOTE: First param in class should be the ID.
 	var id				: Int = 0
-	var repo			: String = ""
-	var clones			: Int = 0
-	var clonesunique	: Int = 0
-	var visitors		: Int = 0
-	var visitorsunique	: Int = 0
-	var stars			: Int = 0
-	var watchers		: Int = 0
-	var forks			: Int = 0
+	var firstname		: String = ""
+	var lastname		: String = ""
+	var email			: String = ""
 
 	override init() {
 		super.init()
 
 		// initialize which table
 		// keeps it out of the var set which will pollute introspection
-		// some ORM's require tablename to be the same as classname. That's silly.
-		table = "stats"
-	}
-/*
-	// only required if StORMProtocol is defined
-	
-	// required by Protocol
-	func to(_ this: StORMRow) {
-		id				= this.data["id"] as! Int
-		repo			= this.data["repo"] as! String
-		clones			= this.data["clones"] as! Int
-		clonesunique	= this.data["clonesunique"] as! Int
-		visitors		= this.data["visitors"] as! Int
-		visitorsunique	= this.data["visitorsunique"] as! Int
-		stars			= this.data["stars"] as! Int
-		watchers		= this.data["watchers"] as! Int
-		forks			= this.data["forks"] as! Int
+		// some ORM's require tablename to be the same as classname.
+		table = "users"
 	}
 
-	// required by Protocol
-	func rows() -> [StatsTesting] {
-		var rows = [StatsTesting]()
+	override func to(_ this: StORMRow) {
+		id				= this.data["id"] as! Int
+		firstname		= this.data["firstname"] as! String
+		lastname		= this.data["lastname"] as! String
+		email			= this.data["email"] as! String
+	}
+
+	func rows() -> [User] {
+		var rows = [User]()
 		for i in 0..<self.results.rows.count {
-			let row = StatsTesting()
+			let row = User()
 			row.to(self.results.rows[i])
 			rows.append(row)
 		}
 		return rows
 	}
-*/
+	override func makeRow() {
+		self.to(self.results.rows[0])
+	}
 }
 
-var obj = StatsTesting()
+
+
+print("====================================================")
+print("INSERT: ")
+var obj = User()
 obj.connection = connect
 
-let _ = obj.select(whereclause: "stars = $1 AND repo = $2", vals: ["5", "perfect"], orderby: ["id"])
+do {
+	obj.id = try obj.insert(cols: ["firstname","lastname","email"], params: ["Donkey", "Kong", "donkey.kong@mailinator.com"]) as! Int
+	print("New ID: \(obj.id)")
 
-print(obj.results.cursorData)
+} catch {
+	print("Error detacted: \(error)")
+}
+
+
+print("====================================================")
+print("UPDATE: ")
+obj.firstname = "Mickey"
+obj.lastname = "Mouse"
+obj.email = "Mickey.Mouse@mailinator.com"
+
+do {
+	var updateResponse = try obj.update(cols: ["firstname","lastname","email"], params: [obj.firstname, obj.lastname, obj.email], idName: "id", idValue: obj.id)
+	print("UPDATE RESPONSE: \(updateResponse)")
+} catch {
+	print("Error detacted: \(error)")
+}
+
+print("====================================================")
+print("DELETE: ")
+
+do {
+	//try obj.delete(id: obj.id)
+	try obj.delete()
+} catch {
+	print("Error detacted: \(error)")
+}
+
+
+
+print("====================================================")
+print("SELECT: ")
+obj = User()
+obj.connection = connect
+
+do {
+	try obj.select(whereclause: "firstname = $1", params: ["Joe"], orderby: ["id"])
+	print("\(obj.firstname) \(obj.lastname)")
+
+} catch {
+	print("Error detacted: \(error)")
+}
+
+print("====================================================")
+
