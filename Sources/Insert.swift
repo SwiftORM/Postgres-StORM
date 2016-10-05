@@ -12,17 +12,34 @@ import PostgreSQL
 
 extension PostgresStORM {
 
-	public func insert(cols: [String], vals: [Any]) {
+
+	public func insert(cols: [String], params: [Any]) throws -> Any {
+		let (idname, _) = firstAsKey()
+		do {
+			return try insert(cols: cols, params: params, idcolumn: idname)
+		} catch {
+			throw StORMError.error(error.localizedDescription)
+		}
+	}
+
+	public func insert(cols: [String], params: [Any], idcolumn: String) throws -> Any {
 
 		// PostgreSQL specific insert staement exec
-		var valsString = [String]()
+		var paramString = [String]()
 		var substString = [String]()
-		for i in 0..<vals.count {
-			valsString.append(String(describing: vals[i]))
+		for i in 0..<params.count {
+			paramString.append(String(describing: params[i]))
 			substString.append("$\(i+1)")
 		}
-		let str = "INSERT INTO \(self.table) (\(cols.joined(separator: ","))) VALUES(\(substString.joined(separator: ",")))"
-		let _ = exec(str, params: valsString)
+		let str = "INSERT INTO \(self.table) (\(cols.joined(separator: ","))) VALUES(\(substString.joined(separator: ","))) RETURNING \(idcolumn)"
+
+		do {
+			let response = try exec(str, params: paramString)
+			return parseRows(response)[0].data[idcolumn]!
+		} catch {
+			throw StORMError.error(error.localizedDescription)
+		}
+
 	}
 
 
