@@ -10,7 +10,7 @@ import Foundation
 import StORM
 import PostgreSQL
 
-extension PostgresConnect {
+extension PostgresStORM {
 
 	/// Execute Raw SQL (with parameter binding)
 	/// Returns PGResult

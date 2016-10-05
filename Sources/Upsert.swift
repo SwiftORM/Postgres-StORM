@@ -11,11 +11,10 @@ import StORM
 import PostgreSQL
 
 
-extension PostgresConnect {
+extension PostgresStORM {
 	
-	public func upsert(table: String, cols: [String], vals: [Any], conflictkeys: [String]) {
-		self.table = table
-		
+	public func upsert(cols: [String], vals: [Any], conflictkeys: [String]) {
+
 		// PostgreSQL specific insert staement exec
 		var valsString = [String]()
 		var substString = [String]()
@@ -30,7 +29,7 @@ extension PostgresConnect {
 			}
 
 		}
-		let str = "INSERT INTO \(table) (\(cols.joined(separator: ","))) VALUES(\(substString.joined(separator: ","))) ON CONFLICT (\(conflictkeys.joined(separator: ","))) DO UPDATE SET \(upsertString.joined(separator: ","))"
+		let str = "INSERT INTO \(self.table) (\(cols.joined(separator: ","))) VALUES(\(substString.joined(separator: ","))) ON CONFLICT (\(conflictkeys.joined(separator: ","))) DO UPDATE SET \(upsertString.joined(separator: ","))"
 		let _ = exec(str, params: valsString)
 	}
 

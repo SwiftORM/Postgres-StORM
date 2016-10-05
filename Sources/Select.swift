@@ -10,32 +10,45 @@ import Foundation
 import StORM
 import PostgreSQL
 
-extension PostgresConnect {
+extension PostgresStORM {
 
 	public func select(
-		table:			String,
-		cols:			[String],
 		whereclause:	String,
 		vals:			[Any],
 		orderby:		[String],
 		cursor:			StORMCursor = StORMCursor(),
-		joins:			[DataSourceJoin] = [],
+		joins:			[StORMDataSourceJoin] = [],
 		having:			[String] = [],
 		groupBy:		[String] = []
 		) -> StORMResultSet {
-		self.table = table
+		return select(columns: [], whereclause: whereclause, vals: vals, orderby: orderby, cursor: cursor, joins: joins, having: having, groupBy: groupBy)
+	}
+
+	public func select(
+		columns:		[String],
+		whereclause:	String,
+		vals:			[Any],
+		orderby:		[String],
+		cursor:			StORMCursor = StORMCursor(),
+		joins:			[StORMDataSourceJoin] = [],
+		having:			[String] = [],
+		groupBy:		[String] = []
+		) -> StORMResultSet {
 
 		let clauseCount = "COUNT(*) AS counter"
 		var clauseSelectList = "*"
 		var clauseWhere = ""
 		var clauseOrder = ""
 
-		if cols.count > 0 {
-			clauseSelectList = cols.joined(separator: ",")
+		if columns.count > 0 {
+			clauseSelectList = columns.joined(separator: ",")
+		} else {
+			clauseSelectList = cols().keys.joined(separator: ",")
 		}
 		if whereclause.characters.count > 0 {
 			clauseWhere = " WHERE \(whereclause)"
 		}
+
 		var valsString = [String]()
 		for i in 0..<vals.count {
 			valsString.append(String(describing: vals[i]))
@@ -44,9 +57,8 @@ extension PostgresConnect {
 			clauseOrder = " ORDER BY \(orderby.joined(separator: ", "))"
 		}
 
-
 		let getCount = execRows("SELECT \(clauseCount) FROM \(table) \(clauseWhere)", params: valsString)
-		rows.cursorData = StORMCursor(
+		results.cursorData = StORMCursor(
 			limit: cursor.limit,
 			offset: cursor.offset,
 			totalRecords: getCount.first!.data["counter"]! as! Int)
@@ -65,9 +77,10 @@ extension PostgresConnect {
 			str += " OFFSET \(cursor.offset)"
 		}
 
-		rows.rows = execRows(str, params: valsString)
+		// save results into ResultSet
+		results.rows = execRows(str, params: valsString)
 		
-		return rows
+		return results
 	}
 
 }

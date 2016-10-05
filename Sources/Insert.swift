@@ -10,10 +10,10 @@ import Foundation
 import StORM
 import PostgreSQL
 
-extension PostgresConnect {
+extension PostgresStORM {
 
-	public func insert(table: String, cols: [String], vals: [Any]) {
-		self.table = table
+	public func insert(cols: [String], vals: [Any]) {
+
 		// PostgreSQL specific insert staement exec
 		var valsString = [String]()
 		var substString = [String]()
@@ -21,7 +21,7 @@ extension PostgresConnect {
 			valsString.append(String(describing: vals[i]))
 			substString.append("$\(i+1)")
 		}
-		let str = "INSERT INTO \(table) (\(cols.joined(separator: ","))) VALUES(\(substString.joined(separator: ",")))"
+		let str = "INSERT INTO \(self.table) (\(cols.joined(separator: ","))) VALUES(\(substString.joined(separator: ",")))"
 		let _ = exec(str, params: valsString)
 	}
 

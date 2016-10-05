@@ -12,31 +12,27 @@ import PostgreSQL
 
 // TODO:  detect response and return t/f as appropriate
 
-extension PostgresConnect {
+extension PostgresStORM {
 
-	private func deleteSQL(_ table: String, idName: String = "id", limit: Int = 1) -> String {
-		self.table = table
+	func deleteSQL(_ table: String, idName: String = "id", limit: Int = 1) -> String {
 		return "DELETE FROM \(table) WHERE \(idName) = $1 LIMIT \(limit)"
 	}
 
 	/// Deletes one row, with an id as an integer
-	public func delete(_ table: String, id: Int, idName: String = "id", limit: Int = 1) -> Bool {
-		self.table = table
-		let _ = exec(deleteSQL(table, idName: idName, limit: limit), params: [String(id)])
+	public func delete(id: Int, idName: String = "id", limit: Int = 1) -> Bool {
+		let _ = exec(deleteSQL(self.table, idName: idName, limit: limit), params: [String(id)])
 		return true
 	}
 
 	/// Deletes one row, with an id as a String
-	public func delete(_ table: String, id: String, idName: String = "id", limit: Int = 1) -> Bool {
-		self.table = table
-		let _ = exec(deleteSQL(table, idName: idName, limit: limit), params: [id])
+	public func delete(id: String, idName: String = "id", limit: Int = 1) -> Bool {
+		let _ = exec(deleteSQL(self.table, idName: idName, limit: limit), params: [id])
 		return true
 	}
 
 	/// Deletes one row, with an id as a UUID
-	public func delete(_ table: String, id: UUID, idName: String = "id", limit: Int = 1) -> Bool {
-		self.table = table
-		let _ = exec(deleteSQL(table, idName: idName, limit: limit), params: [id.string])
+	public func delete(id: UUID, idName: String = "id", limit: Int = 1) -> Bool {
+		let _ = exec(deleteSQL(self.table, idName: idName, limit: limit), params: [id.string])
 		return true
 	}
 

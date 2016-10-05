@@ -12,16 +12,14 @@ import PostgreSQL
 
 // TODO:  detect response and return t/f as appropriate
 
-extension PostgresConnect {
+extension PostgresStORM {
 
 	public func update(_
-						table: String,
-						cols: [String],
-						vals: [Any],
-						idName: String = "id",
-						limit: Int = 1
+			cols: [String],
+			vals: [Any],
+			idName: String = "id",
+			limit: Int = 1
 		) -> Bool {
-		self.table = table
 
 		// PostgreSQL specific insert staement exec
 		var valsString = [String]()
@@ -40,12 +38,10 @@ extension PostgresConnect {
 
 
 	public func update(_
-		table: String,
-	                   cols: [(String, Any)],
-	                   idName: String = "id",
-	                   limit: Int = 1
+		   cols: [(String, Any)],
+		   idName: String = "id",
+		   limit: Int = 1
 		) -> Bool {
-		self.table = table
 
 		// PostgreSQL specific insert staement exec
 //		var valsString = [String]()
