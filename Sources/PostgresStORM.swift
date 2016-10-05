@@ -9,7 +9,7 @@
 import StORM
 import PostgreSQL
 
-open class PostgresStORM: StORM {
+open class PostgresStORM: StORM, StORMProtocol {
 	open var connection = PostgresConnect()
 
 	// table
@@ -19,47 +19,84 @@ open class PostgresStORM: StORM {
 
 	// Internal function which executes statements, with parameter binding
 	// Returns raw result
-	func exec(_ statement: String, params: [String]) -> PGResult {
+	@discardableResult
+	func exec(_ statement: String, params: [String]) throws -> PGResult {
 		connection.open()
 		defer { connection.server.close() }
 		connection.statement = statement
-		return connection.server.exec(statement: statement, params: params)
+		let result = connection.server.exec(statement: statement, params: params)
+		// set exec message
+		errorMsg = connection.server.errorMessage().trimmingCharacters(in: .whitespacesAndNewlines)
+		if isError() {
+			throw StORMError.error(errorMsg)
+		}
+		return result
 	}
 
 	// Internal function which executes statements, with parameter binding
 	// Returns a processed row set
-	func execRows(_ statement: String, params: [String]) -> [StORMRow] {
+	@discardableResult
+	func execRows(_ statement: String, params: [String]) throws -> [StORMRow] {
 		connection.open()
 		defer { connection.server.close() }
 		connection.statement = statement
-		let result = connection.server.exec(statement: statement, params: params )
+		let result = connection.server.exec(statement: statement, params: params)
+
+		// set exec message
+		errorMsg = connection.server.errorMessage().trimmingCharacters(in: .whitespacesAndNewlines)
+		if isError() {
+			throw StORMError.error(errorMsg)
+		}
+
 		let resultRows = parseRows(result)
 		result.clear()
 		return resultRows
 	}
 
 
+	func isError() -> Bool {
+		if errorMsg.contains(string: "ERROR") {
+			print(errorMsg)
+			return true
+		}
+		return false
+	}
+
+	open func to(_ this: StORMRow) {
+//		id				= this.data["id"] as! Int
+//		firstname		= this.data["firstname"] as! String
+//		lastname		= this.data["lastname"] as! String
+//		email			= this.data["email"] as! String
+	}
+
+//	open func rows() -> [Any] {
+//		return []
+//	}
+	open func makeRow() {
+		self.to(self.results.rows[0])
+	}
+
 }
 
 
 extension PostgresStORM {
-	fileprivate func parseRows(_ result: PGResult) -> [StORMRow] {
+	public func parseRows(_ result: PGResult) -> [StORMRow] {
 		var resultRows = [StORMRow]()
 
 		let num = result.numTuples()
 
 		for x in 0..<num { // rows
-			var vals = [String: Any]()
+			var params = [String: Any]()
 
 			for f in 0..<result.numFields() {
 
 				switch PostgresMap(Int(result.fieldType(index: f)!)) {
 				case "Int":
-					vals[result.fieldName(index: f)!] = result.getFieldInt(tupleIndex: x, fieldIndex: f)
+					params[result.fieldName(index: f)!] = result.getFieldInt(tupleIndex: x, fieldIndex: f)
 				case "Bool":
-					vals[result.fieldName(index: f)!] = result.getFieldBool(tupleIndex: x, fieldIndex: f)
+					params[result.fieldName(index: f)!] = result.getFieldBool(tupleIndex: x, fieldIndex: f)
 				case "String":
-					vals[result.fieldName(index: f)!] = result.getFieldString(tupleIndex: x, fieldIndex: f)
+					params[result.fieldName(index: f)!] = result.getFieldString(tupleIndex: x, fieldIndex: f)
 					// json
 					// xml
 					// float
@@ -69,12 +106,12 @@ extension PostgresStORM {
 					// timestampz
 				// jsonb
 				default:
-					vals[result.fieldName(index: f)!] = result.getFieldString(tupleIndex: x, fieldIndex: f)
+					params[result.fieldName(index: f)!] = result.getFieldString(tupleIndex: x, fieldIndex: f)
 				}
 
 			}
 			let thisRow = StORMRow()
-			thisRow.data = vals
+			thisRow.data = params
 			resultRows.append(thisRow)
 		}
 		return resultRows

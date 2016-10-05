@@ -14,7 +14,6 @@ open class PostgresConnect: StORMConnect {
 	// server connection
 	
 	public let server = PGConnection()
-	//public var rows = StORMResultSet()
 
 
 	/// Init with no credentials
@@ -46,7 +45,7 @@ open class PostgresConnect: StORMConnect {
 		let status = server.connectdb(self.connectionString())
 		if status != .ok {
 			print(status)
-			resultCode = .database
+			resultCode = .error(String(describing: status))
 		} else {
 			resultCode = .noError
 		}
