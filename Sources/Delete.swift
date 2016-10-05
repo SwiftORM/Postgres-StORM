@@ -14,25 +14,40 @@ import PostgreSQL
 
 extension PostgresStORM {
 
-	func deleteSQL(_ table: String, idName: String = "id", limit: Int = 1) -> String {
-		return "DELETE FROM \(table) WHERE \(idName) = $1 LIMIT \(limit)"
+	func deleteSQL(_ table: String, idName: String = "id") -> String {
+		return "DELETE FROM \(table) WHERE \(idName) = $1"
 	}
 
 	/// Deletes one row, with an id as an integer
-	public func delete(id: Int, idName: String = "id", limit: Int = 1) -> Bool {
-		let _ = exec(deleteSQL(self.table, idName: idName, limit: limit), params: [String(id)])
+	@discardableResult
+	public func delete(id: Int, idName: String = "id") throws -> Bool {
+		do {
+			try exec(deleteSQL(self.table, idName: idName), params: [String(id)])
+		} catch {
+			throw StORMError.error(error.localizedDescription)
+		}
 		return true
 	}
 
 	/// Deletes one row, with an id as a String
-	public func delete(id: String, idName: String = "id", limit: Int = 1) -> Bool {
-		let _ = exec(deleteSQL(self.table, idName: idName, limit: limit), params: [id])
+	@discardableResult
+	public func delete(id: String, idName: String = "id") throws -> Bool {
+		do {
+			try exec(deleteSQL(self.table, idName: idName), params: [id])
+		} catch {
+			throw StORMError.error(error.localizedDescription)
+		}
 		return true
 	}
 
 	/// Deletes one row, with an id as a UUID
-	public func delete(id: UUID, idName: String = "id", limit: Int = 1) -> Bool {
-		let _ = exec(deleteSQL(self.table, idName: idName, limit: limit), params: [id.string])
+	@discardableResult
+	public func delete(id: UUID, idName: String = "id") throws -> Bool {
+		do {
+			try exec(deleteSQL(self.table, idName: idName), params: [id.string])
+		} catch {
+			throw StORMError.error(error.localizedDescription)
+		}
 		return true
 	}
 
