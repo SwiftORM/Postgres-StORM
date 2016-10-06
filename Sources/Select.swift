@@ -63,7 +63,7 @@ extension PostgresStORM {
 			clauseOrder = " ORDER BY \(orderby.joined(separator: ", "))"
 		}
 		do {
-			let getCount = try execRows("SELECT \(clauseCount) FROM \(table) \(clauseWhere)", params: paramsString)
+			let getCount = try execRows("SELECT \(clauseCount) FROM \(table()) \(clauseWhere)", params: paramsString)
 			let numrecords = getCount.first?.data["counter"]! as? Int ?? 0
 			results.cursorData = StORMCursor(
 				limit: cursor.limit,
@@ -72,7 +72,7 @@ extension PostgresStORM {
 
 
 			// SELECT ASSEMBLE
-			var str = "SELECT \(clauseSelectList) FROM \(table) \(clauseWhere) \(clauseOrder)"
+			var str = "SELECT \(clauseSelectList) FROM \(table()) \(clauseWhere) \(clauseOrder)"
 
 
 			// TODO: Add joins, having, groupby
