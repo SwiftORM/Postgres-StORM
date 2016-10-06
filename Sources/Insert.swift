@@ -52,7 +52,8 @@ extension PostgresStORM {
 			let response = try exec(str, params: paramString)
 			return parseRows(response)[0].data[idcolumn]!
 		} catch {
-			throw StORMError.error(error.localizedDescription)
+			self.error = StORMError.error(error.localizedDescription)
+			throw error
 		}
 
 	}

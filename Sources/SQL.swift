@@ -18,7 +18,8 @@ extension PostgresStORM {
 		do {
 			return try exec(statement, params: params)
 		} catch {
-			throw StORMError.error(error.localizedDescription)
+			self.error = StORMError.error(error.localizedDescription)
+			throw error
 		}
 	}
 

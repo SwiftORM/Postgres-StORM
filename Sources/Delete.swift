@@ -23,7 +23,8 @@ extension PostgresStORM {
 		do {
 			try exec(deleteSQL(self.table(), idName: idName), params: [String(id)])
 		} catch {
-			throw StORMError.error(error.localizedDescription)
+			self.error = StORMError.error(error.localizedDescription)
+			throw error
 		}
 		return true
 	}
@@ -34,7 +35,8 @@ extension PostgresStORM {
 		do {
 			try exec(deleteSQL(self.table(), idName: idName), params: [id])
 		} catch {
-			throw StORMError.error(error.localizedDescription)
+			self.error = StORMError.error(error.localizedDescription)
+			throw error
 		}
 		return true
 	}
@@ -45,7 +47,8 @@ extension PostgresStORM {
 		do {
 			try exec(deleteSQL(self.table(), idName: idName), params: [id.string])
 		} catch {
-			throw StORMError.error(error.localizedDescription)
+			self.error = StORMError.error(error.localizedDescription)
+			throw error
 		}
 		return true
 	}

@@ -26,7 +26,8 @@ extension PostgresStORM {
 		do {
 			try exec(str, params: paramsString)
 		} catch {
-			throw StORMError.error(error.localizedDescription)
+			self.error = StORMError.error(error.localizedDescription)
+			throw error
 		}
 
 		return true
