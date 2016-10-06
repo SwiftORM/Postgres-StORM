@@ -12,6 +12,7 @@ import PostgreSQL
 
 extension PostgresStORM {
 
+	@discardableResult
 	public func update(cols: [String], params: [Any], idName: String, idValue: Any) throws -> Bool {
 
 		var paramsString = [String]()
@@ -22,7 +23,7 @@ extension PostgresStORM {
 		}
 		paramsString.append(String(describing: idValue))
 
-		let str = "UPDATE \(self.table) SET \(set.joined(separator: ", ")) WHERE \(idName) = $\(params.count+1)"
+		let str = "UPDATE \(self.table()) SET \(set.joined(separator: ", ")) WHERE \(idName) = $\(params.count+1)"
 
 		do {
 			try exec(str, params: paramsString)
@@ -33,8 +34,8 @@ extension PostgresStORM {
 		return true
 	}
 
-
-	public func update(data: [(String, Any)],idName: String = "id", idValue: Any) throws -> Bool {
+	@discardableResult
+	public func update(data: [(String, Any)], idName: String = "id", idValue: Any) throws -> Bool {
 
 		var keys = [String]()
 		var vals = [String]()
