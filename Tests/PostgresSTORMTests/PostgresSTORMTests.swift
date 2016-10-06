@@ -32,9 +32,9 @@ class User: PostgresStORM {
 		}
 		return rows
 	}
-	override func makeRow() {
-		self.to(self.results.rows[0])
-	}
+//	override func makeRow() {
+//		self.to(self.results.rows[0])
+//	}
 }
 
 
