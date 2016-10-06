@@ -8,6 +8,9 @@
 
 import StORM
 import PostgreSQL
+import PerfectLib
+import PerfectXML
+import Foundation
 
 extension PostgresStORM {
 	public func parseRows(_ result: PGResult) -> [StORMRow] {
@@ -27,14 +30,35 @@ extension PostgresStORM {
 					params[result.fieldName(index: f)!] = result.getFieldBool(tupleIndex: x, fieldIndex: f)
 				case "String":
 					params[result.fieldName(index: f)!] = result.getFieldString(tupleIndex: x, fieldIndex: f)
-					// json
-					// xml
-					// float
-					// date
+				case "json":
+					let output = result.getFieldString(tupleIndex: x, fieldIndex: f)
+					do {
+						params[result.fieldName(index: f)!] = try output?.jsonDecode() as? [String:Any]
+					} catch {
+						params[result.fieldName(index: f)!] = [String:Any]()
+					}
+				case "jsonb":
+					let output = result.getFieldString(tupleIndex: x, fieldIndex: f)
+					do {
+						params[result.fieldName(index: f)!] = try output?.jsonDecode() as? [String:Any]
+					} catch {
+						params[result.fieldName(index: f)!] = [String:Any]()
+					}
+				case "xml":
+					// will create an XML object
+					params[result.fieldName(index: f)!] = XDocument(fromSource: result.getFieldString(tupleIndex: x, fieldIndex: f)!)
+				case "float":
+					params[result.fieldName(index: f)!] = result.getFieldFloat(tupleIndex: x, fieldIndex: f)
+
+				case "date":
+					let output = result.getFieldString(tupleIndex: x, fieldIndex: f)
+					let formatter = DateFormatter()
+					formatter.dateFormat = "yyyy/MM/dd hh:mm Z"
+					params[result.fieldName(index: f)!] = formatter.date(from: output!)
+
 					// time
 					// timestamp
 					// timestampz
-				// jsonb
 				default:
 					params[result.fieldName(index: f)!] = result.getFieldString(tupleIndex: x, fieldIndex: f)
 				}
