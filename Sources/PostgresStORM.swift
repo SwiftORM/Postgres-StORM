@@ -12,8 +12,20 @@ import PostgreSQL
 open class PostgresStORM: StORM, StORMProtocol {
 	open var connection = PostgresConnect()
 
-	// table
-	open var table = ""
+
+	open func table() -> String {
+		return "unset"
+	}
+
+	override init() {
+		super.init()
+	}
+
+	init(_ connect: PostgresConnect) {
+		super.init()
+		self.connection = connect
+	}
+
 	// table structure
 	//open var cols = [String: String]()
 
@@ -74,6 +86,46 @@ open class PostgresStORM: StORM, StORMProtocol {
 //	}
 	open func makeRow() {
 		self.to(self.results.rows[0])
+	}
+
+	open func save() throws {
+		do {
+			if keyIsEmpty() {
+				print("inserting")
+				try insert(asData(1))
+			} else {
+				print("updating")
+				let (idname, idval) = firstAsKey()
+				print("idname: \(idname), idval: \(idval)")
+				try update(data: asData(1), idName: idname, idValue: idval)
+			}
+		} catch {
+			throw StORMError.error(error.localizedDescription)
+		}
+	}
+	open func save(set: (_ id: Any)->Void) throws {
+		do {
+			if keyIsEmpty() {
+				print("inserting")
+				let setId = try insert(asData(1))
+				set(setId)
+			} else {
+				print("updating")
+				let (idname, idval) = firstAsKey()
+				print("idname: \(idname), idval: \(idval)")
+				try update(data: asData(1), idName: idname, idValue: idval)
+			}
+		} catch {
+			throw StORMError.error(error.localizedDescription)
+		}
+	}
+
+	override open func create() throws {
+		do {
+			try insert(cols(1))
+		} catch {
+			throw StORMError.error(error.localizedDescription)
+		}
 	}
 
 }
