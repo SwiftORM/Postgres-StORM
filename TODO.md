@@ -6,4 +6,3 @@
 * complete group by
 * documentation
 * upsert
-* "find" convenience method
