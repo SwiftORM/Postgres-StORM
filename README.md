@@ -1,4 +1,4 @@
-# Postgres-StORM Documentation
+# Postgres-StORM
 
 Postgres-StORM is the PostgreSQL module for StORM - a Swift ORM.
 
