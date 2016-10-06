@@ -150,12 +150,93 @@ class PostgresSTORMTests: XCTestCase {
 		XCTAssert(obj.lastname == obj2.lastname, "Object not the same (lastname)")
 	}
 
+	/* =============================================================================================
+	Get (with id) - integer too large
+	============================================================================================= */
+	func testGetByPassingIDtooLarge() {
+		let obj = User(connect)
+
+		do {
+			try obj.get(874682634789)
+			XCTFail("Should have failed (integer too large)")
+		} catch {
+			print("^ Ignore this error, that is expected and should show 'ERROR:  value \"874682634789\" is out of range for type integer'")
+			// test passes - should have a failure!
+		}
+	}
+	
+	/* =============================================================================================
+	Get (with id) - no record
+	// test get where id does not exist (id)
+	============================================================================================= */
+	func testGetByPassingIDnoRecord() {
+		let obj = User(connect)
+
+		do {
+			try obj.get(1111111)
+			XCTFail("Should have failed (record not found)")
+		} catch {
+			if obj.error.string() != StORMError.noRecordFound.string() {
+				XCTFail("Fall through... Should have failed (record not found): \(obj.error.string())")
+			}
+			print("^ Ignore this error, that is expected and should show 'ERROR:  not found'")
+			// test passes - should have a failure!
+		}
+	}
+	
 
 
 
+	// test get where id does not exist ()
+	/* =============================================================================================
+	Get (preset id) - no record
+	// test get where id does not exist (id)
+	============================================================================================= */
+	func testGetBySettingIDnoRecord() {
+		let obj = User(connect)
+		obj.id = 1111111
+		do {
+			try obj.get()
+			XCTFail("Should have failed (record not found)")
+		} catch {
+			if obj.error.string() != StORMError.noRecordFound.string() {
+				XCTFail("Fall through... Should have failed (record not found): \(obj.error.string())")
+			}
+			print("^ Ignore this error, that is expected and should show 'ERROR:  not found'")
+			// test passes - should have a failure!
+		}
+	}
+	
+
+	/* =============================================================================================
+	Returning DELETE statement to verify correct form
+	// deleteSQL
+	============================================================================================= */
+	func testCheckDeleteSQL() {
+		let obj = User(connect)
+		XCTAssert(obj.deleteSQL("test", idName: "testid") == "DELETE FROM test WHERE testid = $1", "DeleteSQL statement is not correct")
+
+	}
 
 
 
+	// delete(id: Int, idName: String = "id")
+	// delete()
+
+
+	/* =============================================================================================
+	Find
+	============================================================================================= */
+	func testFind() {
+		let obj = User(connect)
+
+		do {
+			try obj.find([("firstname", "Joe")])
+			//print("Find Record:  \(obj.id), \(obj.firstname), \(obj.lastname), \(obj.email)")
+		} catch {
+			XCTFail("Find error: \(obj.error.string())")
+		}
+	}
 
 
 
