@@ -44,6 +44,7 @@ extension PostgresStORM {
 
 
 	public func find() {
-		
+		// TODO: find function...
+		// shortcut to select
 	}
 }
