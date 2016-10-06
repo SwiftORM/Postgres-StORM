@@ -13,6 +13,23 @@ import PostgreSQL
 extension PostgresStORM {
 
 
+	@discardableResult
+	public func insert(_ data: [(String, Any)]) throws -> Any {
+
+		var keys = [String]()
+		var vals = [String]()
+		for i in data {
+			keys.append(i.0)
+			vals.append(String(describing: i.1))
+		}
+		do {
+			return try insert(cols: keys, params: vals)
+		} catch {
+			throw StORMError.error(error.localizedDescription)
+		}
+	}
+
+
 	public func insert(cols: [String], params: [Any]) throws -> Any {
 		let (idname, _) = firstAsKey()
 		do {
@@ -31,7 +48,7 @@ extension PostgresStORM {
 			paramString.append(String(describing: params[i]))
 			substString.append("$\(i+1)")
 		}
-		let str = "INSERT INTO \(self.table) (\(cols.joined(separator: ","))) VALUES(\(substString.joined(separator: ","))) RETURNING \(idcolumn)"
+		let str = "INSERT INTO \(self.table()) (\(cols.joined(separator: ","))) VALUES(\(substString.joined(separator: ","))) RETURNING \(idcolumn)"
 
 		do {
 			let response = try exec(str, params: paramString)
