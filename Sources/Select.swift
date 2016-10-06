@@ -47,7 +47,11 @@ extension PostgresStORM {
 		if columns.count > 0 {
 			clauseSelectList = columns.joined(separator: ",")
 		} else {
-			clauseSelectList = cols().keys.joined(separator: ",")
+			var keys = [String]()
+			for i in cols() {
+				keys.append(i.0)
+			}
+			clauseSelectList = keys.joined(separator: ",")
 		}
 		if whereclause.characters.count > 0 {
 			clauseWhere = " WHERE \(whereclause)"
@@ -60,7 +64,6 @@ extension PostgresStORM {
 		if orderby.count > 0 {
 			clauseOrder = " ORDER BY \(orderby.joined(separator: ", "))"
 		}
-
 		do {
 			let getCount = try execRows("SELECT \(clauseCount) FROM \(table) \(clauseWhere)", params: paramsString)
 			let numrecords = getCount.first?.data["counter"]! as? Int ?? 0
