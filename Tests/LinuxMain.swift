@@ -1,6 +1,6 @@
 import XCTest
-@testable import PerfectPostgresCRUDTests
+@testable import PostgresSTORMTests
 
 XCTMain([
-     testCase(PerfectPostgresCRUDTests.allTests),
+     testCase(PostgresSTORMTests.allTests),
 ])
