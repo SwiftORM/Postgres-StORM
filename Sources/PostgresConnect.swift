@@ -6,13 +6,12 @@
 //
 //
 
-import Foundation
 import StORM
 import PostgreSQL
 
 open class PostgresConnect: StORMConnect {
+
 	// server connection
-	
 	public let server = PGConnection()
 
 
@@ -50,9 +49,6 @@ open class PostgresConnect: StORMConnect {
 			resultCode = .noError
 		}
 	}
-
-
-
 }
 
 

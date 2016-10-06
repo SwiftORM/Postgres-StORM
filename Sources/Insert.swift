@@ -6,9 +6,7 @@
 //
 //
 
-import Foundation
 import StORM
-import PostgreSQL
 
 extension PostgresStORM {
 

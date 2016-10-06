@@ -6,4 +6,12 @@
 //
 //
 
-import Foundation
+import XCTest
+
+#if !os(OSX)
+	public func allTests() -> [XCTestCaseEntry] {
+		return [
+			testCase(PostgresSTORMTests.allTests)
+		]
+	}
+#endif

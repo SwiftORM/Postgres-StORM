@@ -7,9 +7,7 @@
 //
 
 
-import PerfectLib
 import StORM
-import PostgreSQL
 
 extension PostgresStORM {
 

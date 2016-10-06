@@ -8,7 +8,6 @@
 
 import PerfectLib
 import StORM
-import PostgreSQL
 
 // TODO:  detect response and return t/f as appropriate
 
