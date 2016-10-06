@@ -6,65 +6,65 @@
 //
 //
 
-import StORM
-
-var connect = PostgresConnect(
-	host: "localhost",
-	username: "perfect",
-	password: "perfect",
-	database: "perfect_testing",
-	port: 32768
-)
-
-
-class User: PostgresStORM {
-	// NOTE: First param in class should be the ID.
-	var id				: Int = 0
-	var firstname		: String = ""
-	var lastname		: String = ""
-	var email			: String = ""
-
-
-	override open func table() -> String {
-		return "users"
-	}
-
-	override func to(_ this: StORMRow) {
-		id				= this.data["id"] as! Int
-		firstname		= this.data["firstname"] as! String
-		lastname		= this.data["lastname"] as! String
-		email			= this.data["email"] as! String
-	}
-
-	func rows() -> [User] {
-		var rows = [User]()
-		for i in 0..<self.results.rows.count {
-			let row = User()
-			row.to(self.results.rows[i])
-			rows.append(row)
-		}
-		return rows
-	}
-	override func makeRow() {
-		self.to(self.results.rows[0])
-	}
-}
-
-print("====================================================")
-
-var obj = User(connect)
-//obj.connection = connect    // Use if object was instantiated without connection
-obj.firstname = "X"
-obj.lastname = "Y"
-
-try obj.save {id in obj.id = id as! Int }
-print(obj.id)
-
-
-obj.firstname = "A"
-obj.lastname = "B"
-try obj.save()
-print(obj.id)
+//import StORM
+//
+//var connect = PostgresConnect(
+//	host: "localhost",
+//	username: "perfect",
+//	password: "perfect",
+//	database: "perfect_testing",
+//	port: 32768
+//)
+//
+//
+//class User: PostgresStORM {
+//	// NOTE: First param in class should be the ID.
+//	var id				: Int = 0
+//	var firstname		: String = ""
+//	var lastname		: String = ""
+//	var email			: String = ""
+//
+//
+//	override open func table() -> String {
+//		return "users"
+//	}
+//
+//	override func to(_ this: StORMRow) {
+//		id				= this.data["id"] as! Int
+//		firstname		= this.data["firstname"] as! String
+//		lastname		= this.data["lastname"] as! String
+//		email			= this.data["email"] as! String
+//	}
+//
+//	func rows() -> [User] {
+//		var rows = [User]()
+//		for i in 0..<self.results.rows.count {
+//			let row = User()
+//			row.to(self.results.rows[i])
+//			rows.append(row)
+//		}
+//		return rows
+//	}
+//	override func makeRow() {
+//		self.to(self.results.rows[0])
+//	}
+//}
+//
+//print("====================================================")
+//
+//var obj = User(connect)
+////obj.connection = connect    // Use if object was instantiated without connection
+//obj.firstname = "X"
+//obj.lastname = "Y"
+//
+//try obj.save {id in obj.id = id as! Int }
+//print(obj.id)
+//
+//
+//obj.firstname = "A"
+//obj.lastname = "B"
+//try obj.save()
+//print(obj.id)
 
 
 //print("====================================================")
@@ -151,5 +151,5 @@ print(obj.id)
 //	print("Error detacted: \(error)")
 //}
 
-print("====================================================")
+//print("====================================================")
 
