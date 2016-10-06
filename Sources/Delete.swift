@@ -22,7 +22,7 @@ extension PostgresStORM {
 	@discardableResult
 	public func delete(id: Int, idName: String = "id") throws -> Bool {
 		do {
-			try exec(deleteSQL(self.table, idName: idName), params: [String(id)])
+			try exec(deleteSQL(self.table(), idName: idName), params: [String(id)])
 		} catch {
 			throw StORMError.error(error.localizedDescription)
 		}
@@ -33,7 +33,7 @@ extension PostgresStORM {
 	@discardableResult
 	public func delete(id: String, idName: String = "id") throws -> Bool {
 		do {
-			try exec(deleteSQL(self.table, idName: idName), params: [id])
+			try exec(deleteSQL(self.table(), idName: idName), params: [id])
 		} catch {
 			throw StORMError.error(error.localizedDescription)
 		}
@@ -44,7 +44,7 @@ extension PostgresStORM {
 	@discardableResult
 	public func delete(id: UUID, idName: String = "id") throws -> Bool {
 		do {
-			try exec(deleteSQL(self.table, idName: idName), params: [id.string])
+			try exec(deleteSQL(self.table(), idName: idName), params: [id.string])
 		} catch {
 			throw StORMError.error(error.localizedDescription)
 		}
