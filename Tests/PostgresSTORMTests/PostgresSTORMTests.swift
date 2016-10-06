@@ -97,7 +97,7 @@ class PostgresSTORMTests: XCTestCase {
 	/* =============================================================================================
 	Get (with id)
 	============================================================================================= */
-	func testGetByID() {
+	func testGetByPassingID() {
 		let obj = User(connect)
 		//obj.connection = connect    // Use if object was instantiated without connection
 		obj.firstname = "X"
@@ -122,6 +122,33 @@ class PostgresSTORMTests: XCTestCase {
 	}
 
 
+	/* =============================================================================================
+	Get (by id set)
+	============================================================================================= */
+	func testGetByID() {
+		let obj = User(connect)
+		//obj.connection = connect    // Use if object was instantiated without connection
+		obj.firstname = "X"
+		obj.lastname = "Y"
+
+		do {
+			try obj.save {id in obj.id = id as! Int }
+		} catch {
+			XCTFail(error as! String)
+		}
+
+		let obj2 = User(connect)
+		obj2.id = obj.id
+		
+		do {
+			try obj2.get()
+		} catch {
+			XCTFail(error as! String)
+		}
+		XCTAssert(obj.id == obj2.id, "Object not the same (id)")
+		XCTAssert(obj.firstname == obj2.firstname, "Object not the same (firstname)")
+		XCTAssert(obj.lastname == obj2.lastname, "Object not the same (lastname)")
+	}
 
 
 
