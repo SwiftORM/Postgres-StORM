@@ -26,9 +26,6 @@ open class PostgresStORM: StORM, StORMProtocol {
 		self.connection = connect
 	}
 
-	// table structure
-	//open var cols = [String: String]()
-
 	// Internal function which executes statements, with parameter binding
 	// Returns raw result
 	@discardableResult

@@ -22,6 +22,4 @@ extension PostgresStORM {
 			throw error
 		}
 	}
-
-
 }
