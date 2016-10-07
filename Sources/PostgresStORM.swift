@@ -116,7 +116,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 	@discardableResult
 	override open func create() throws {
 		do {
-			try insert(cols(1))
+			try insert(asData())
 		} catch {
 			throw StORMError.error(error.localizedDescription)
 		}
