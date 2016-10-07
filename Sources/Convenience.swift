@@ -25,6 +25,16 @@ extension PostgresStORM {
 		}
 	}
 
+	public func delete(_ id: Any) throws {
+		let (idname, _) = firstAsKey()
+		do {
+			try exec(deleteSQL(self.table(), idName: idname), params: [String(describing: id)])
+		} catch {
+			self.error = StORMError.error(error.localizedDescription)
+			throw error
+		}
+	}
+
 	public func get(_ id: Any) throws {
 		let (idname, _) = firstAsKey()
 		do {
