@@ -95,6 +95,24 @@ class PostgresSTORMTests: XCTestCase {
 	}
 
 	/* =============================================================================================
+	Save - Create
+	============================================================================================= */
+	func testSaveCreate() {
+		let obj = User(connect)
+
+		do {
+			obj.id			= 10001
+			obj.firstname	= "Mister"
+			obj.lastname	= "PotatoHead"
+			obj.email		= "potato@example.com"
+			try obj.create()
+		} catch {
+			XCTFail(error as! String)
+		}
+		XCTAssert(obj.id == 10001, "Object not saved (create)")
+	}
+
+	/* =============================================================================================
 	Get (with id)
 	============================================================================================= */
 	func testGetByPassingID() {
