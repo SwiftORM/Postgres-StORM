@@ -55,7 +55,7 @@ class PostgresSTORMTests: XCTestCase {
 		username: ProcessInfo.processInfo.environment["USER"]!,
 		password: ProcessInfo.processInfo.environment["PASS"]!,
 		database: ProcessInfo.processInfo.environment["DB"]!,
-		port: Int(ProcessInfo.processInfo.environment["PORT"]!)
+		port: Int(ProcessInfo.processInfo.environment["PORT"]!)!
 	)
 	#endif
 
@@ -73,7 +73,7 @@ class PostgresSTORMTests: XCTestCase {
 		print(ProcessInfo.processInfo.environment["USER"]!)
 		print(ProcessInfo.processInfo.environment["PASS"]!)
 		print(ProcessInfo.processInfo.environment["DB"]!)
-		print(Int(ProcessInfo.processInfo.environment["PORT"]!))
+		print(Int(ProcessInfo.processInfo.environment["PORT"]!)!)
 
 		let obj = User(connect)
 		//obj.connection = connect    // Use if object was instantiated without connection
