@@ -43,19 +43,19 @@ class PostgresSTORMTests: XCTestCase {
 
 	#if os(Linux)
 	var connect = PostgresConnect(
-		host: "localhost",
-		username: "perfect",
-		password: "perfect",
-		database: "perfect_testing",
-		port: 32768
-	)
-	#else
-	var connect = PostgresConnect(
 		host: ProcessInfo.processInfo.environment["HOST"]!,
 		username: ProcessInfo.processInfo.environment["USER"]!,
 		password: ProcessInfo.processInfo.environment["PASS"]!,
 		database: ProcessInfo.processInfo.environment["DB"]!,
 		port: Int(ProcessInfo.processInfo.environment["PORT"]!)!
+	)
+	#else
+	var connect = PostgresConnect(
+		host: "localhost",
+		username: "perfect",
+		password: "perfect",
+		database: "perfect_testing",
+		port: 32768
 	)
 	#endif
 
