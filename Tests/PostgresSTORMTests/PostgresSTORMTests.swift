@@ -49,7 +49,7 @@ class PostgresSTORMTests: XCTestCase {
 		port: 32768
 	)
 	#else
-	print("host: \(ProcessInfo.processInfo.environment["HOST"]),username: \(ProcessInfo.processInfo.environment["USER"]),password: \(ProcessInfo.processInfo.environment["PASS"]),database: \(ProcessInfo.processInfo.environment["DB"]),port: \(ProcessInfo.processInfo.environment["PORT"])")
+	print("host: \(ProcessInfo.processInfo.environment[\"HOST\"]),username: \(ProcessInfo.processInfo.environment[\"USER\"]),password: \(ProcessInfo.processInfo.environment[\"PASS\"]),database: \(ProcessInfo.processInfo.environment[\"DB\"]),port: \(ProcessInfo.processInfo.environment[\"PORT\"])")
 	var connect = PostgresConnect(
 		host: ProcessInfo.processInfo.environment["HOST"],
 		username: ProcessInfo.processInfo.environment["USER"],
