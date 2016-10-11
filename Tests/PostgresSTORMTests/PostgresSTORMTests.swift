@@ -1,5 +1,6 @@
 import XCTest
 import PerfectLib
+import Foundation
 import StORM
 @testable import PostgresSTORM
 
@@ -67,7 +68,7 @@ class PostgresSTORMTests: XCTestCase {
 	Save - New
 	============================================================================================= */
 	func testSaveNew() {
-		
+
 		print(ProcessInfo.processInfo.environment["HOST"])
 		print(ProcessInfo.processInfo.environment["USER"])
 		print(ProcessInfo.processInfo.environment["PASS"])
