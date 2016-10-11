@@ -286,6 +286,14 @@ class PostgresSTORMTests: XCTestCase {
 		return [
 			("testSaveNew", testSaveNew),
 			("testSaveUpdate", testSaveUpdate),
+			("testSaveCreate", testSaveCreate),
+			("testGetByPassingID", testGetByPassingID),
+			("testGetByID", testGetByID),
+			("testGetByPassingIDtooLarge", testGetByPassingIDtooLarge),
+			("testGetByPassingIDnoRecord", testGetByPassingIDnoRecord),
+			("testGetBySettingIDnoRecord", testGetBySettingIDnoRecord),
+			("testCheckDeleteSQL", testCheckDeleteSQL),
+			("testFind", testFind)
 		]
 	}
 
