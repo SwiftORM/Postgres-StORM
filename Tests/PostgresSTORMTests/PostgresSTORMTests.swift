@@ -39,6 +39,8 @@ class User: PostgresStORM {
 
 
 class PostgresSTORMTests: XCTestCase {
+
+	#if os(Linux)
 	var connect = PostgresConnect(
 		host: "localhost",
 		username: "perfect",
@@ -46,7 +48,17 @@ class PostgresSTORMTests: XCTestCase {
 		database: "perfect_testing",
 		port: 32768
 	)
-	
+	#else
+	var connect = PostgresConnect(
+		host: ProcessInfo.processInfo.environment["HOST"],
+		username: ProcessInfo.processInfo.environment["USER"],
+		password: ProcessInfo.processInfo.environment["PASS"],
+		database: ProcessInfo.processInfo.environment["DB"],
+		port: ProcessInfo.processInfo.environment["PORT"]
+	)
+	#endif
+
+
 	override func setUp() {
 		super.setUp()
 	}
