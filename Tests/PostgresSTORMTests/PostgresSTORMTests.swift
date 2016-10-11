@@ -49,11 +49,6 @@ class PostgresSTORMTests: XCTestCase {
 		port: 32768
 	)
 	#else
-	print(ProcessInfo.processInfo.environment["HOST"])
-	print(ProcessInfo.processInfo.environment["USER"])
-	print(ProcessInfo.processInfo.environment["PASS"])
-	print(ProcessInfo.processInfo.environment["DB"])
-	print(ProcessInfo.processInfo.environment["PORT"])
 	var connect = PostgresConnect(
 		host: ProcessInfo.processInfo.environment["HOST"],
 		username: ProcessInfo.processInfo.environment["USER"],
@@ -72,7 +67,13 @@ class PostgresSTORMTests: XCTestCase {
 	Save - New
 	============================================================================================= */
 	func testSaveNew() {
-		print(connect.database)
+		
+		print(ProcessInfo.processInfo.environment["HOST"])
+		print(ProcessInfo.processInfo.environment["USER"])
+		print(ProcessInfo.processInfo.environment["PASS"])
+		print(ProcessInfo.processInfo.environment["DB"])
+		print(ProcessInfo.processInfo.environment["PORT"])
+
 		let obj = User(connect)
 		//obj.connection = connect    // Use if object was instantiated without connection
 		obj.firstname = "X"
