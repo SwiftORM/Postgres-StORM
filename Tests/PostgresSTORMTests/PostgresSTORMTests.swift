@@ -67,7 +67,7 @@ class PostgresSTORMTests: XCTestCase {
 	Save - New
 	============================================================================================= */
 	func testSaveNew() {
-		print(connect.host)
+		print(connect.database)
 		let obj = User(connect)
 		//obj.connection = connect    // Use if object was instantiated without connection
 		obj.firstname = "X"
