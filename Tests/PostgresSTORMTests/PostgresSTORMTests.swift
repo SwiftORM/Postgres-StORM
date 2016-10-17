@@ -2,7 +2,7 @@ import XCTest
 import PerfectLib
 import Foundation
 import StORM
-@testable import PostgresSTORM
+@testable import PostgresStORM
 
 
 class User: PostgresStORM {
@@ -39,7 +39,7 @@ class User: PostgresStORM {
 }
 
 
-class PostgresSTORMTests: XCTestCase {
+class PostgresStORMTests: XCTestCase {
 
 	#if os(Linux)
 	var connect = PostgresConnect(
@@ -282,7 +282,7 @@ class PostgresSTORMTests: XCTestCase {
 
 
 
-	static var allTests : [(String, (PostgresSTORMTests) -> () throws -> Void)] {
+	static var allTests : [(String, (PostgresStORMTests) -> () throws -> Void)] {
 		return [
 			("testSaveNew", testSaveNew),
 			("testSaveUpdate", testSaveUpdate),

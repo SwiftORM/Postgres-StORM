@@ -1,6 +1,6 @@
 //
 //  Convenience.swift
-//  PostgresSTORM
+//  PostgresStORM
 //
 //  Created by Jonathan Guthrie on 2016-10-04.
 //
