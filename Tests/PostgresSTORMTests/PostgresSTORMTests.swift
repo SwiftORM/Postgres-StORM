@@ -84,7 +84,7 @@ class PostgresSTORMTests: XCTestCase {
 		do {
 			try obj.save {id in obj.id = id as! Int }
 		} catch {
-			XCTFail(error as! String)
+			XCTFail(String(describing: error))
 		}
 		XCTAssert(obj.id > 0, "Object not saved (new)")
 	}
@@ -101,7 +101,7 @@ class PostgresSTORMTests: XCTestCase {
 		do {
 			try obj.save {id in obj.id = id as! Int }
 		} catch {
-			XCTFail(error as! String)
+			XCTFail(String(describing: error))
 		}
 
 		obj.firstname = "A"
@@ -109,7 +109,7 @@ class PostgresSTORMTests: XCTestCase {
 		do {
 			try obj.save()
 		} catch {
-			XCTFail(error as! String)
+			XCTFail(String(describing: error))
 		}
 		print(obj.errorMsg)
 		XCTAssert(obj.id > 0, "Object not saved (update)")
@@ -128,7 +128,7 @@ class PostgresSTORMTests: XCTestCase {
 			obj.email		= "potato@example.com"
 			try obj.create()
 		} catch {
-			XCTFail(error as! String)
+			XCTFail(String(describing: error))
 		}
 		XCTAssert(obj.id == 10001, "Object not saved (create)")
 	}
@@ -145,7 +145,7 @@ class PostgresSTORMTests: XCTestCase {
 		do {
 			try obj.save {id in obj.id = id as! Int }
 		} catch {
-			XCTFail(error as! String)
+			XCTFail(String(describing: error))
 		}
 
 		let obj2 = User(connect)
@@ -153,7 +153,7 @@ class PostgresSTORMTests: XCTestCase {
 		do {
 			try obj2.get(obj.id)
 		} catch {
-			XCTFail(error as! String)
+			XCTFail(String(describing: error))
 		}
 		XCTAssert(obj.id == obj2.id, "Object not the same (id)")
 		XCTAssert(obj.firstname == obj2.firstname, "Object not the same (firstname)")
@@ -173,7 +173,7 @@ class PostgresSTORMTests: XCTestCase {
 		do {
 			try obj.save {id in obj.id = id as! Int }
 		} catch {
-			XCTFail(error as! String)
+			XCTFail(String(describing: error))
 		}
 
 		let obj2 = User(connect)
@@ -182,7 +182,7 @@ class PostgresSTORMTests: XCTestCase {
 		do {
 			try obj2.get()
 		} catch {
-			XCTFail(error as! String)
+			XCTFail(String(describing: error))
 		}
 		XCTAssert(obj.id == obj2.id, "Object not the same (id)")
 		XCTAssert(obj.firstname == obj2.firstname, "Object not the same (firstname)")
