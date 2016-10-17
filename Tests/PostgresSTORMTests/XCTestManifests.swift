@@ -6,12 +6,12 @@
 //
 //
 
-import XCTest
-
-#if !os(OSX)
-	public func allTests() -> [XCTestCaseEntry] {
-		return [
-			testCase(PostgresStORMTests.allTests)
-		]
-	}
-#endif
+//import XCTest
+//
+//#if !os(OSX)
+//	public func allTests() -> [XCTestCaseEntry] {
+//		return [
+//			testCase(PostgresStORMTests.allTests)
+//		]
+//	}
+//#endif
