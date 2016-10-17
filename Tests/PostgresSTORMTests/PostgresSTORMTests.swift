@@ -245,7 +245,7 @@ class PostgresSTORMTests: XCTestCase {
 //			// test passes - should have a failure!
 //		}
 //	}
-	
+
 
 	/* =============================================================================================
 	Returning DELETE statement to verify correct form
@@ -290,8 +290,8 @@ class PostgresSTORMTests: XCTestCase {
 			("testGetByPassingID", testGetByPassingID),
 			("testGetByID", testGetByID),
 			("testGetByPassingIDtooLarge", testGetByPassingIDtooLarge),
-			("testGetByPassingIDnoRecord", testGetByPassingIDnoRecord),
-			("testGetBySettingIDnoRecord", testGetBySettingIDnoRecord),
+//			("testGetByPassingIDnoRecord", testGetByPassingIDnoRecord),
+//			("testGetBySettingIDnoRecord", testGetBySettingIDnoRecord),
 			("testCheckDeleteSQL", testCheckDeleteSQL),
 			("testFind", testFind)
 		]
