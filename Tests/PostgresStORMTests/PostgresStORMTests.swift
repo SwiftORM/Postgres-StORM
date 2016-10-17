@@ -119,6 +119,15 @@ class PostgresStORMTests: XCTestCase {
 	Save - Create
 	============================================================================================= */
 	func testSaveCreate() {
+		// first clean up!
+		let deleting = User(connect)
+		do {
+			deleting.id			= 10001
+			try deleting.delete()
+		} catch {
+			XCTFail(String(describing: error))
+		}
+
 		let obj = User(connect)
 
 		do {
