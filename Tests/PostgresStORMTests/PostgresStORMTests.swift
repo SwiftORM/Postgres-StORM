@@ -9,7 +9,7 @@ class User: PostgresStORM {
 	// NOTE: First param in class should be the ID.
 	var id				: Int = 0
 	var firstname		: String = ""
-	var lastname		: String = ""
+	var lastname			: String = ""
 	var email			: String = ""
 
 
@@ -20,7 +20,7 @@ class User: PostgresStORM {
 	override func to(_ this: StORMRow) {
 		id				= this.data["id"] as! Int
 		firstname		= this.data["firstname"] as! String
-		lastname		= this.data["lastname"] as! String
+		lastname		    = this.data["lastname"] as! String
 		email			= this.data["email"] as! String
 	}
 
