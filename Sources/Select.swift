@@ -43,13 +43,13 @@ extension PostgresStORM {
 		var clauseOrder = ""
 
 		if columns.count > 0 {
-			clauseSelectList = columns.joined(separator: ",")
+			clauseSelectList = "\"" + columns.joined(separator: "\",\"") + "\""
 		} else {
 			var keys = [String]()
 			for i in cols() {
 				keys.append(i.0)
 			}
-			clauseSelectList = keys.joined(separator: ",")
+			clauseSelectList = "\"" + keys.joined(separator: "\",\"") + "\""
 		}
 		if whereclause.characters.count > 0 {
 			clauseWhere = " WHERE \(whereclause)"
