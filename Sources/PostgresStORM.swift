@@ -1,6 +1,6 @@
 //
 //  PostgreStORM.swift
-//  PostgresStORM
+//  PostgresSTORM
 //
 //  Created by Jonathan Guthrie on 2016-10-03.
 //
@@ -8,6 +8,8 @@
 
 import StORM
 import PostgreSQL
+
+public var connect: PostgresConnect?
 
 open class PostgresStORM: StORM, StORMProtocol {
 	open var connection = PostgresConnect()
@@ -17,11 +19,11 @@ open class PostgresStORM: StORM, StORMProtocol {
 		return "unset"
 	}
 
-	override init() {
+	override public init() {
 		super.init()
 	}
 
-	init(_ connect: PostgresConnect) {
+	public init(_ connect: PostgresConnect) {
 		super.init()
 		self.connection = connect
 	}
@@ -72,10 +74,10 @@ open class PostgresStORM: StORM, StORMProtocol {
 	}
 
 	open func to(_ this: StORMRow) {
-//		id				= this.data["id"] as! Int
-//		firstname		= this.data["firstname"] as! String
-//		lastname		= this.data["lastname"] as! String
-//		email			= this.data["email"] as! String
+		//		id				= this.data["id"] as! Int
+		//		firstname		= this.data["firstname"] as! String
+		//		lastname		= this.data["lastname"] as! String
+		//		email			= this.data["email"] as! String
 	}
 
 	open func makeRow() {
@@ -118,7 +120,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 			throw StORMError.error(error.localizedDescription)
 		}
 	}
-
+	
 }
 
 
