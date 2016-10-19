@@ -50,7 +50,7 @@ extension PostgresStORM {
 		//"\"" + columns.joined(separator: "\",\"") + "\""
 
 		let colsjoined = "\"" + cols.joined(separator: "\",\"") + "\""
-		let str = "INSERT INTO \(self.table()) (\(colsjoined)) VALUES(\(substString.joined(separator: ","))) RETURNING \(idcolumn)"
+		let str = "INSERT INTO \(self.table()) (\(colsjoined)) VALUES(\(substString.joined(separator: ","))) RETURNING \"\(idcolumn)\""
 
 		do {
 			let response = try exec(str, params: paramString)
