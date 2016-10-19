@@ -17,11 +17,11 @@ extension PostgresStORM {
 		var set = [String]()
 		for i in 0..<params.count {
 			paramsString.append(String(describing: params[i]))
-			set.append("\(cols[i]) = $\(i+1)")
+			set.append("\"\(cols[i])\" = $\(i+1)")
 		}
 		paramsString.append(String(describing: idValue))
 
-		let str = "UPDATE \(self.table()) SET \(set.joined(separator: ", ")) WHERE \(idName) = $\(params.count+1)"
+		let str = "UPDATE \(self.table()) SET \(set.joined(separator: ", ")) WHERE \"\(idName)\" = $\(params.count+1)"
 
 		do {
 			try exec(str, params: paramsString)

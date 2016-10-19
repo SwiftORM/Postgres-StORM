@@ -60,7 +60,8 @@ extension PostgresStORM {
 			paramsString.append(String(describing: params[i]))
 		}
 		if orderby.count > 0 {
-			clauseOrder = " ORDER BY \(orderby.joined(separator: ", "))"
+			let colsjoined = "\"" + orderby.joined(separator: "\",\"") + "\""
+			clauseOrder = " ORDER BY \(colsjoined)"
 		}
 		do {
 			let getCount = try execRows("SELECT \(clauseCount) FROM \(table()) \(clauseWhere)", params: paramsString)

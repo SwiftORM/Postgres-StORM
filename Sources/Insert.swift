@@ -46,7 +46,11 @@ extension PostgresStORM {
 			paramString.append(String(describing: params[i]))
 			substString.append("$\(i+1)")
 		}
-		let str = "INSERT INTO \(self.table()) (\(cols.joined(separator: ","))) VALUES(\(substString.joined(separator: ","))) RETURNING \(idcolumn)"
+
+		//"\"" + columns.joined(separator: "\",\"") + "\""
+
+		let colsjoined = "\"" + cols.joined(separator: "\",\"") + "\""
+		let str = "INSERT INTO \(self.table()) (\(colsjoined)) VALUES(\(substString.joined(separator: ","))) RETURNING \(idcolumn)"
 
 		do {
 			let response = try exec(str, params: paramString)
