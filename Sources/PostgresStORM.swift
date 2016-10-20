@@ -28,6 +28,10 @@ open class PostgresStORM: StORM, StORMProtocol {
 		self.connection = connect
 	}
 
+	private func printDebug(_ statement: String, _ params: [String]) {
+		if StORMdebug { print("StORM Debug: \(statement) : \(params.joined(separator: ", "))") }
+	}
+
 	// Internal function which executes statements, with parameter binding
 	// Returns raw result
 	@discardableResult
@@ -35,7 +39,10 @@ open class PostgresStORM: StORM, StORMProtocol {
 		connection.open()
 		defer { connection.server.close() }
 		connection.statement = statement
+
+		printDebug(statement, params)
 		let result = connection.server.exec(statement: statement, params: params)
+
 		// set exec message
 		errorMsg = connection.server.errorMessage().trimmingCharacters(in: .whitespacesAndNewlines)
 		if isError() {
@@ -51,6 +58,8 @@ open class PostgresStORM: StORM, StORMProtocol {
 		connection.open()
 		defer { connection.server.close() }
 		connection.statement = statement
+
+		printDebug(statement, params)
 		let result = connection.server.exec(statement: statement, params: params)
 
 		// set exec message
