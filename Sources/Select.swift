@@ -60,7 +60,7 @@ extension PostgresStORM {
 			paramsString.append(String(describing: params[i]))
 		}
 		if orderby.count > 0 {
-			let colsjoined = "\"" + orderby.joined(separator: "\",\"") + "\""
+			let colsjoined = orderby.joined(separator: ",")
 			clauseOrder = " ORDER BY \(colsjoined)"
 		}
 		do {
