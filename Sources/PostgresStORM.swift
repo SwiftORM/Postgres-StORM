@@ -129,7 +129,46 @@ open class PostgresStORM: StORM, StORMProtocol {
 			throw StORMError.error(error.localizedDescription)
 		}
 	}
-	
+	/// Table Create Statement
+	@discardableResult
+	open func setupTable(_ str: String = "") throws {
+		var createStatement = str
+		if str.characters.count == 0 {
+			var opt = [String]()
+			for child in Mirror(reflecting: self).children {
+				guard let key = child.label else {
+					continue
+				}
+				var verbage = ""
+				if !key.hasPrefix("internal_") {
+					verbage = "\(key) "
+					if child.value is Int {
+						verbage += "int8"
+					} else if child.value is Bool {
+						verbage += "bool"
+					} else if child.value is Double {
+						verbage += "float8"
+					} else if child.value is UInt || child.value is UInt8 || child.value is UInt16 || child.value is UInt32 || child.value is UInt64 {
+						verbage += "bytea"
+					} else {
+						verbage += "text"
+					}
+					if opt.count == 0 {
+						verbage += " NOT NULL"
+					}
+					opt.append(verbage)
+				}
+			}
+			createStatement = "CREATE TABLE IF NOT EXISTS \(table()) (\(opt.joined(separator: ", ")))"
+		}
+		do {
+			try sql(createStatement, params: [])
+		} catch {
+			print(error)
+			throw StORMError.error(String(describing: error))
+		}
+	}
+
 }
 
 
