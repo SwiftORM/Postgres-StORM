@@ -22,4 +22,13 @@ extension PostgresStORM {
 			throw error
 		}
 	}
+	@discardableResult
+	public func sqlRows(_ statement: String, params: [String]) throws -> [StORMRow] {
+		do {
+			return try execRows(statement, params: params)
+		} catch {
+			self.error = StORMError.error(error.localizedDescription)
+			throw error
+		}
+	}
 }
