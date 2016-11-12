@@ -135,6 +135,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 		var createStatement = str
 		if str.characters.count == 0 {
 			var opt = [String]()
+			var keyName = ""
 			for child in Mirror(reflecting: self).children {
 				guard let key = child.label else {
 					continue
@@ -142,7 +143,9 @@ open class PostgresStORM: StORM, StORMProtocol {
 				var verbage = ""
 				if !key.hasPrefix("internal_") {
 					verbage = "\(key) "
-					if child.value is Int {
+					if child.value is Int && opt.count == 0 {
+						verbage += "serial"
+					} else if child.value is Int {
 						verbage += "int8"
 					} else if child.value is Bool {
 						verbage += "bool"
@@ -157,11 +160,15 @@ open class PostgresStORM: StORM, StORMProtocol {
 					}
 					if opt.count == 0 {
 						verbage += " NOT NULL"
+						keyName = key
 					}
 					opt.append(verbage)
 				}
 			}
-			createStatement = "CREATE TABLE IF NOT EXISTS \(table()) (\(opt.joined(separator: ", ")))"
+			let keyComponent = ", CONSTRAINT \"\(table())_key\" PRIMARY KEY (\"\(keyName)\") NOT DEFERRABLE INITIALLY IMMEDIATE"
+
+			createStatement = "CREATE TABLE IF NOT EXISTS \(table()) (\(opt.joined(separator: ", "))\(keyComponent));"
+
 		}
 		do {
 			try sql(createStatement, params: [])
@@ -170,7 +177,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 			throw StORMError.error(String(describing: error))
 		}
 	}
-
+	
 }
 
 
