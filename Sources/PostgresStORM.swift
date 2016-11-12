@@ -146,6 +146,8 @@ open class PostgresStORM: StORM, StORMProtocol {
 						verbage += "int8"
 					} else if child.value is Bool {
 						verbage += "bool"
+					} else if child.value is [String:Any] {
+						verbage += "jsonb"
 					} else if child.value is Double {
 						verbage += "float8"
 					} else if child.value is UInt || child.value is UInt8 || child.value is UInt16 || child.value is UInt32 || child.value is UInt64 {
