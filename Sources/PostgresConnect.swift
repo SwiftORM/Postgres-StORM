@@ -43,8 +43,7 @@ open class PostgresConnect: StORMConnect {
 	public func open() {
 		let status = server.connectdb(self.connectionString())
 		if status != .ok {
-			print(status)
-			resultCode = .error(String(describing: status))
+			resultCode = .error("\(status)")
 		} else {
 			resultCode = .noError
 		}
