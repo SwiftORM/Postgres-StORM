@@ -43,13 +43,13 @@ extension PostgresStORM {
 		var clauseOrder = ""
 
 		if columns.count > 0 {
-			clauseSelectList = columns.joined(separator: ",")
+			clauseSelectList = "\""+columns.joined(separator: "\",\"")+"\""
 		} else {
 			var keys = [String]()
 			for i in cols() {
 				keys.append(i.0)
 			}
-			clauseSelectList = keys.joined(separator: ",")
+			clauseSelectList = "\""+keys.joined(separator: "\",\"")+"\""
 		}
 		if whereclause.characters.count > 0 {
 			clauseWhere = " WHERE \(whereclause)"
@@ -60,7 +60,7 @@ extension PostgresStORM {
 			paramsString.append(String(describing: params[i]))
 		}
 		if orderby.count > 0 {
-			let colsjoined = orderby.joined(separator: ",")
+			let colsjoined = "\""+orderby.joined(separator: "\",\"")+"\""
 			clauseOrder = " ORDER BY \(colsjoined)"
 		}
 		do {
@@ -90,9 +90,9 @@ extension PostgresStORM {
 
 			// id no records found throw an error .noRecordFound
 			if results.cursorData.totalRecords == 0 {
-//				print("************ NO RECORDS FOUND *****************")
+				//				print("************ NO RECORDS FOUND *****************")
 				self.error = StORMError.noRecordFound
-//				print("************ \(self.error.string()) *****************")
+				//				print("************ \(self.error.string()) *****************")
 				throw StORMError.noRecordFound
 			}
 
@@ -105,5 +105,5 @@ extension PostgresStORM {
 			throw error
 		}
 	}
-
+	
 }
