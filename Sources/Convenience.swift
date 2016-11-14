@@ -38,7 +38,7 @@ extension PostgresStORM {
 	public func get(_ id: Any) throws {
 		let (idname, _) = firstAsKey()
 		do {
-			try select(whereclause: "\(idname) = $1", params: [String(describing: id)], orderby: [])
+			try select(whereclause: "\(idname) = $1", params: [id], orderby: [])
 		} catch {
 			throw error
 		}
@@ -47,7 +47,7 @@ extension PostgresStORM {
 	public func get() throws {
 		let (idname, idval) = firstAsKey()
 		do {
-			try select(whereclause: "\(idname) = $1", params: [String(describing: idval)], orderby: [])
+			try select(whereclause: "\(idname) = $1", params: ["\(idval)"], orderby: [])
 		} catch {
 			throw error
 		}
