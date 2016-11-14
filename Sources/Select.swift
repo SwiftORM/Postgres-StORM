@@ -60,18 +60,21 @@ extension PostgresStORM {
 			paramsString.append(String(describing: params[i]))
 		}
 		if orderby.count > 0 {
-			let colsjoined = "\""+orderby.joined(separator: "\",\"")+"\""
+			let colsjoined = orderby.joined(separator: ",")
 			clauseOrder = " ORDER BY \(colsjoined)"
 		}
 		do {
 			let getCount = try execRows("SELECT \(clauseCount) FROM \(table()) \(clauseWhere)", params: paramsString)
-			let numrecords = getCount.first?.data["counter"]! as? Int ?? 0
+			var numrecords = 0
+			if (getCount.first != nil) {
+				numrecords = getCount.first?.data["counter"] as? Int ?? 0
+			}
 			results.cursorData = StORMCursor(
 				limit: cursor.limit,
 				offset: cursor.offset,
 				totalRecords: numrecords)
 
-
+			if numrecords == 0 { return }
 			// SELECT ASSEMBLE
 			var str = "SELECT \(clauseSelectList) FROM \(table()) \(clauseWhere) \(clauseOrder)"
 
@@ -89,21 +92,21 @@ extension PostgresStORM {
 			results.rows = try execRows(str, params: paramsString)
 
 			// id no records found throw an error .noRecordFound
-			if results.cursorData.totalRecords == 0 {
-				//				print("************ NO RECORDS FOUND *****************")
-				self.error = StORMError.noRecordFound
-				//				print("************ \(self.error.string()) *****************")
-				throw StORMError.noRecordFound
-			}
+//			if results.cursorData.totalRecords == 0 {
+////				print("************ NO RECORDS FOUND *****************")
+//				self.error = StORMError.noRecordFound
+////				print("************ \(self.error.string()) *****************")
+//				throw StORMError.noRecordFound
+//			}
 
 			// if just one row returned, act like a "GET"
 			if results.cursorData.totalRecords == 1 { makeRow() }
 
 			//return results
 		} catch {
-			self.error = StORMError.error(error.localizedDescription)
+			self.error = StORMError.error("\(error)")
 			throw error
 		}
 	}
-	
+
 }

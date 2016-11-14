@@ -37,7 +37,6 @@ open class PostgresStORM: StORM, StORMProtocol {
 	@discardableResult
 	func exec(_ statement: String, params: [String]) throws -> PGResult {
 		connection.open()
-		defer { connection.server.close() }
 		connection.statement = statement
 
 		printDebug(statement, params)
@@ -46,8 +45,10 @@ open class PostgresStORM: StORM, StORMProtocol {
 		// set exec message
 		errorMsg = connection.server.errorMessage().trimmingCharacters(in: .whitespacesAndNewlines)
 		if isError() {
+			connection.server.close()
 			throw StORMError.error(errorMsg)
 		}
+		connection.server.close()
 		return result
 	}
 
@@ -56,7 +57,6 @@ open class PostgresStORM: StORM, StORMProtocol {
 	@discardableResult
 	func execRows(_ statement: String, params: [String]) throws -> [StORMRow] {
 		connection.open()
-		defer { connection.server.close() }
 		connection.statement = statement
 
 		printDebug(statement, params)
@@ -65,11 +65,13 @@ open class PostgresStORM: StORM, StORMProtocol {
 		// set exec message
 		errorMsg = connection.server.errorMessage().trimmingCharacters(in: .whitespacesAndNewlines)
 		if isError() {
+			connection.server.close()
 			throw StORMError.error(errorMsg)
 		}
 
 		let resultRows = parseRows(result)
-		result.clear()
+//		result.clear()
+		connection.server.close()
 		return resultRows
 	}
 
@@ -90,6 +92,9 @@ open class PostgresStORM: StORM, StORMProtocol {
 	}
 
 	open func makeRow() {
+		guard self.results.rows.count > 0 else {
+			return
+		}
 		self.to(self.results.rows[0])
 	}
 
@@ -177,7 +182,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 			throw StORMError.error(String(describing: error))
 		}
 	}
-	
+
 }
 
 
