@@ -36,19 +36,27 @@ open class PostgresStORM: StORM, StORMProtocol {
 	// Returns raw result
 	@discardableResult
 	func exec(_ statement: String, params: [String]) throws -> PGResult {
-		connection.open()
-		connection.statement = statement
+		let thisConnection = PostgresConnect(
+			host:		connect!.credentials.host,
+			username:	connect!.credentials.username,
+			password:	connect!.credentials.password,
+			database:	connect!.database,
+			port:		connect!.credentials.port
+		)
+
+		thisConnection.open()
+		thisConnection.statement = statement
 
 		printDebug(statement, params)
-		let result = connection.server.exec(statement: statement, params: params)
+		let result = thisConnection.server.exec(statement: statement, params: params)
 
 		// set exec message
-		errorMsg = connection.server.errorMessage().trimmingCharacters(in: .whitespacesAndNewlines)
+		errorMsg = thisConnection.server.errorMessage().trimmingCharacters(in: .whitespacesAndNewlines)
 		if isError() {
-			connection.server.close()
+			thisConnection.server.close()
 			throw StORMError.error(errorMsg)
 		}
-		connection.server.close()
+		thisConnection.server.close()
 		return result
 	}
 
@@ -56,22 +64,30 @@ open class PostgresStORM: StORM, StORMProtocol {
 	// Returns a processed row set
 	@discardableResult
 	func execRows(_ statement: String, params: [String]) throws -> [StORMRow] {
-		connection.open()
-		connection.statement = statement
+		let thisConnection = PostgresConnect(
+			host:		connect!.credentials.host,
+			username:	connect!.credentials.username,
+			password:	connect!.credentials.password,
+			database:	connect!.database,
+			port:		connect!.credentials.port
+		)
+
+		thisConnection.open()
+		thisConnection.statement = statement
 
 		printDebug(statement, params)
-		let result = connection.server.exec(statement: statement, params: params)
+		let result = thisConnection.server.exec(statement: statement, params: params)
 
 		// set exec message
-		errorMsg = connection.server.errorMessage().trimmingCharacters(in: .whitespacesAndNewlines)
+		errorMsg = thisConnection.server.errorMessage().trimmingCharacters(in: .whitespacesAndNewlines)
 		if isError() {
-			connection.server.close()
+			thisConnection.server.close()
 			throw StORMError.error(errorMsg)
 		}
 
 		let resultRows = parseRows(result)
-//		result.clear()
-		connection.server.close()
+		//		result.clear()
+		thisConnection.server.close()
 		return resultRows
 	}
 
@@ -182,7 +198,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 			throw StORMError.error(String(describing: error))
 		}
 	}
-
+	
 }
 
 
