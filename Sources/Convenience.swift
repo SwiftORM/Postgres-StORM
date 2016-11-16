@@ -60,7 +60,7 @@ extension PostgresStORM {
 		var paramsString = [String]()
 		var set = [String]()
 		for i in 0..<data.count {
-			paramsString.append(data[i].1 as! String)
+			paramsString.append("\(data[i].1)")
 			set.append("\(data[i].0) = $\(i+1)")
 		}
 
