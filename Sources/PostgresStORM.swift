@@ -8,6 +8,7 @@
 
 import StORM
 import PostgreSQL
+import PerfectLogger
 
 public var connect: PostgresConnect?
 
@@ -52,6 +53,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 
 		// set exec message
 		errorMsg = thisConnection.server.errorMessage().trimmingCharacters(in: .whitespacesAndNewlines)
+		if StORMdebug { LogFile.info("Error msg: \(errorMsg)", "./StORMlog.txt") }
 		if isError() {
 			thisConnection.server.close()
 			throw StORMError.error(errorMsg)
@@ -80,6 +82,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 
 		// set exec message
 		errorMsg = thisConnection.server.errorMessage().trimmingCharacters(in: .whitespacesAndNewlines)
+		if StORMdebug { LogFile.info("Error msg: \(errorMsg)", "./StORMlog.txt") }
 		if isError() {
 			thisConnection.server.close()
 			throw StORMError.error(errorMsg)

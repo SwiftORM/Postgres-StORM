@@ -8,6 +8,7 @@
 
 import StORM
 import PostgreSQL
+import PerfectLogger
 
 open class PostgresConnect: StORMConnect {
 
@@ -36,7 +37,9 @@ open class PostgresConnect: StORMConnect {
 
 	// Connection String
 	private func connectionString() -> String {
-		return "postgresql://\(credentials.username):\(credentials.password)@\(credentials.host):\(credentials.port)/\(database)"
+		let conn = "postgresql://\(credentials.username):\(credentials.password)@\(credentials.host):\(credentials.port)/\(database)"
+		if StORMdebug { LogFile.info("Postgres conn: \(conn)", "./StORMlog.txt") }
+		return conn
 	}
 
 	// Initiates the connection
@@ -44,7 +47,9 @@ open class PostgresConnect: StORMConnect {
 		let status = server.connectdb(self.connectionString())
 		if status != .ok {
 			resultCode = .error("\(status)")
+			if StORMdebug { LogFile.info("Postgres conn error: \(status)", "./StORMlog.txt") }
 		} else {
+			if StORMdebug { LogFile.info("Postgres conn state: ok", "./StORMlog.txt") }
 			resultCode = .noError
 		}
 	}
