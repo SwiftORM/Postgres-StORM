@@ -38,7 +38,7 @@ open class PostgresConnect: StORMConnect {
 	// Connection String
 	private func connectionString() -> String {
 		let conn = "postgresql://\(credentials.username):\(credentials.password)@\(credentials.host):\(credentials.port)/\(database)"
-		if StORMdebug { LogFile.info("Postgres conn: \(conn)", "./StORMlog.txt") }
+		if StORMdebug { LogFile.info("Postgres conn: \(conn)", logFile: "./StORMlog.txt") }
 		return conn
 	}
 
@@ -47,9 +47,9 @@ open class PostgresConnect: StORMConnect {
 		let status = server.connectdb(self.connectionString())
 		if status != .ok {
 			resultCode = .error("\(status)")
-			if StORMdebug { LogFile.info("Postgres conn error: \(status)", "./StORMlog.txt") }
+			if StORMdebug { LogFile.info("Postgres conn error: \(status)", logFile: "./StORMlog.txt") }
 		} else {
-			if StORMdebug { LogFile.info("Postgres conn state: ok", "./StORMlog.txt") }
+			if StORMdebug { LogFile.info("Postgres conn state: ok", logFile: "./StORMlog.txt") }
 			resultCode = .noError
 		}
 	}
