@@ -10,10 +10,20 @@ import StORM
 import PostgreSQL
 import PerfectLogger
 
-public var connect: PostgresConnect?
+public struct PostgresConnector {
+
+	public static var host: String		= ""
+	public static var username: String	= ""
+	public static var password: String	= ""
+	public static var database: String	= ""
+	public static var port: Int			= 0
+
+	private init(){}
+
+}
 
 open class PostgresStORM: StORM, StORMProtocol {
-	open var connection = PostgresConnect()
+	private var connection = PostgresConnect()
 
 
 	open func table() -> String {
@@ -22,11 +32,6 @@ open class PostgresStORM: StORM, StORMProtocol {
 
 	override public init() {
 		super.init()
-	}
-
-	public init(_ connect: PostgresConnect) {
-		super.init()
-		self.connection = connect
 	}
 
 	private func printDebug(_ statement: String, _ params: [String]) {
@@ -38,11 +43,11 @@ open class PostgresStORM: StORM, StORMProtocol {
 	@discardableResult
 	func exec(_ statement: String, params: [String]) throws -> PGResult {
 		let thisConnection = PostgresConnect(
-			host:		connect!.credentials.host,
-			username:	connect!.credentials.username,
-			password:	connect!.credentials.password,
-			database:	connect!.database,
-			port:		connect!.credentials.port
+			host:		PostgresConnector.host,
+			username:	PostgresConnector.username,
+			password:	PostgresConnector.password,
+			database:	PostgresConnector.database,
+			port:		PostgresConnector.port
 		)
 
 		thisConnection.open()
@@ -67,11 +72,11 @@ open class PostgresStORM: StORM, StORMProtocol {
 	@discardableResult
 	func execRows(_ statement: String, params: [String]) throws -> [StORMRow] {
 		let thisConnection = PostgresConnect(
-			host:		connect!.credentials.host,
-			username:	connect!.credentials.username,
-			password:	connect!.credentials.password,
-			database:	connect!.database,
-			port:		connect!.credentials.port
+			host:		PostgresConnector.host,
+			username:	PostgresConnector.username,
+			password:	PostgresConnector.password,
+			database:	PostgresConnector.database,
+			port:		PostgresConnector.port
 		)
 
 		thisConnection.open()
