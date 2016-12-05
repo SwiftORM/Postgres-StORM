@@ -158,9 +158,16 @@ open class PostgresStORM: StORM, StORMProtocol {
 			throw StORMError.error(error.localizedDescription)
 		}
 	}
-	/// Table Create Statement
+
+	/// Table Creation (alias for setup)
 	@discardableResult
 	open func setupTable(_ str: String = "") throws {
+		try setup(str)
+	}
+
+	/// Table Creation
+	@discardableResult
+	open func setup(_ str: String = "") throws {
 		var createStatement = str
 		if str.characters.count == 0 {
 			var opt = [String]()

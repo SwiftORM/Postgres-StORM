@@ -33,9 +33,6 @@ class User: PostgresStORM {
 		}
 		return rows
 	}
-//	override func makeRow() {
-//		self.to(self.results.rows[0])
-//	}
 }
 
 
@@ -70,14 +67,7 @@ class PostgresStORMTests: XCTestCase {
 	func testSaveNew() {
 		print("postgresql://\(connect.credentials.username):\(connect.credentials.password)@\(connect.credentials.host):\(connect.credentials.port)/\(connect.database)")
 
-//		print(ProcessInfo.processInfo.environment["HOST"]!)
-//		print(ProcessInfo.processInfo.environment["USER"]!)
-//		print(ProcessInfo.processInfo.environment["PASS"]!)
-//		print(ProcessInfo.processInfo.environment["DB"]!)
-//		print(Int(ProcessInfo.processInfo.environment["PORT"]!)!)
-
-		let obj = User(connect)
-		//obj.connection = connect    // Use if object was instantiated without connection
+		let obj = User()
 		obj.firstname = "X"
 		obj.lastname = "Y"
 
@@ -93,8 +83,7 @@ class PostgresStORMTests: XCTestCase {
 	Save - Update
 	============================================================================================= */
 	func testSaveUpdate() {
-		let obj = User(connect)
-		//obj.connection = connect    // Use if object was instantiated without connection
+		let obj = User()
 		obj.firstname = "X"
 		obj.lastname = "Y"
 
@@ -120,7 +109,7 @@ class PostgresStORMTests: XCTestCase {
 	============================================================================================= */
 	func testSaveCreate() {
 		// first clean up!
-		let deleting = User(connect)
+		let deleting = User()
 		do {
 			deleting.id			= 10001
 			try deleting.delete()
@@ -128,7 +117,7 @@ class PostgresStORMTests: XCTestCase {
 			XCTFail(String(describing: error))
 		}
 
-		let obj = User(connect)
+		let obj = User()
 
 		do {
 			obj.id			= 10001
@@ -146,8 +135,7 @@ class PostgresStORMTests: XCTestCase {
 	Get (with id)
 	============================================================================================= */
 	func testGetByPassingID() {
-		let obj = User(connect)
-		//obj.connection = connect    // Use if object was instantiated without connection
+		let obj = User()
 		obj.firstname = "X"
 		obj.lastname = "Y"
 
@@ -174,8 +162,7 @@ class PostgresStORMTests: XCTestCase {
 	Get (by id set)
 	============================================================================================= */
 	func testGetByID() {
-		let obj = User(connect)
-		//obj.connection = connect    // Use if object was instantiated without connection
+		let obj = User()
 		obj.firstname = "X"
 		obj.lastname = "Y"
 
@@ -185,7 +172,7 @@ class PostgresStORMTests: XCTestCase {
 			XCTFail(String(describing: error))
 		}
 
-		let obj2 = User(connect)
+		let obj2 = User()
 		obj2.id = obj.id
 		
 		do {
@@ -202,7 +189,7 @@ class PostgresStORMTests: XCTestCase {
 	Get (with id) - integer too large
 	============================================================================================= */
 	func testGetByPassingIDtooLarge() {
-		let obj = User(connect)
+		let obj = User()
 
 		do {
 			try obj.get(874682634789)
@@ -218,7 +205,7 @@ class PostgresStORMTests: XCTestCase {
 	// test get where id does not exist (id)
 	============================================================================================= */
 	func testGetByPassingIDnoRecord() {
-		let obj = User(connect)
+		let obj = User()
 
 		do {
 			try obj.get(1111111)
@@ -241,7 +228,7 @@ class PostgresStORMTests: XCTestCase {
 	// test get where id does not exist (id)
 	============================================================================================= */
 	func testGetBySettingIDnoRecord() {
-		let obj = User(connect)
+		let obj = User()
 		obj.id = 1111111
 		do {
 			try obj.get()
@@ -261,22 +248,18 @@ class PostgresStORMTests: XCTestCase {
 	// deleteSQL
 	============================================================================================= */
 	func testCheckDeleteSQL() {
-		let obj = User(connect)
+		let obj = User()
 		XCTAssert(obj.deleteSQL("test", idName: "testid") == "DELETE FROM test WHERE testid = $1", "DeleteSQL statement is not correct")
 
 	}
 
 
 
-	// delete(id: Int, idName: String = "id")
-	// delete()
-
-
 	/* =============================================================================================
 	Find
 	============================================================================================= */
 	func testFind() {
-		let obj = User(connect)
+		let obj = User()
 
 		do {
 			try obj.find([("firstname", "Joe")])
@@ -285,9 +268,6 @@ class PostgresStORMTests: XCTestCase {
 			XCTFail("Find error: \(obj.error.string())")
 		}
 	}
-
-
-	// TODO: Test for select order by
 
 
 
