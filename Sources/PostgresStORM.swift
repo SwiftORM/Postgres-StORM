@@ -202,7 +202,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 					opt.append(verbage)
 				}
 			}
-			let keyComponent = ", CONSTRAINT \"\(table())_key\" PRIMARY KEY (\"\(keyName)\") NOT DEFERRABLE INITIALLY IMMEDIATE"
+			let keyComponent = ", CONSTRAINT \(table())_key PRIMARY KEY (\(keyName)) NOT DEFERRABLE INITIALLY IMMEDIATE"
 
 			createStatement = "CREATE TABLE IF NOT EXISTS \(table()) (\(opt.joined(separator: ", "))\(keyComponent));"
 			if StORMdebug { LogFile.info("createStatement: \(createStatement)", logFile: "./StORMlog.txt") }
