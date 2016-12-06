@@ -28,7 +28,7 @@ open class PostgresConnect: StORMConnect {
 	            username: String = "",
 	            password: String = "",
 	            database: String = "",
-	            port: Int = 0) {
+	            port: Int = 5432) {
 		super.init()
 		self.database = database
 		self.datasource = .Postgres

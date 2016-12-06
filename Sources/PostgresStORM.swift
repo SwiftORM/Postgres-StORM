@@ -16,7 +16,7 @@ public struct PostgresConnector {
 	public static var username: String	= ""
 	public static var password: String	= ""
 	public static var database: String	= ""
-	public static var port: Int			= 0
+	public static var port: Int			= 5432
 
 	private init(){}
 
@@ -132,7 +132,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 				try update(data: asData(1), idName: idname, idValue: idval)
 			}
 		} catch {
-			throw StORMError.error(error.localizedDescription)
+			throw StORMError.error("\(error)")
 		}
 	}
 	@discardableResult
@@ -146,7 +146,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 				try update(data: asData(1), idName: idname, idValue: idval)
 			}
 		} catch {
-			throw StORMError.error(error.localizedDescription)
+			throw StORMError.error("\(error)")
 		}
 	}
 
@@ -155,7 +155,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 		do {
 			try insert(asData())
 		} catch {
-			throw StORMError.error(error.localizedDescription)
+			throw StORMError.error("\(error)")
 		}
 	}
 
@@ -168,6 +168,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 	/// Table Creation
 	@discardableResult
 	open func setup(_ str: String = "") throws {
+		LogFile.info("Running setup: \(table())", logFile: "./StORMlog.txt")
 		var createStatement = str
 		if str.characters.count == 0 {
 			var opt = [String]()
@@ -204,13 +205,14 @@ open class PostgresStORM: StORM, StORMProtocol {
 			let keyComponent = ", CONSTRAINT \"\(table())_key\" PRIMARY KEY (\"\(keyName)\") NOT DEFERRABLE INITIALLY IMMEDIATE"
 
 			createStatement = "CREATE TABLE IF NOT EXISTS \(table()) (\(opt.joined(separator: ", "))\(keyComponent));"
+			if StORMdebug { LogFile.info("createStatement: \(createStatement)", logFile: "./StORMlog.txt") }
 
 		}
 		do {
 			try sql(createStatement, params: [])
 		} catch {
-			print(error)
-			throw StORMError.error(String(describing: error))
+			LogFile.info("Error msg: \(error)", logFile: "./StORMlog.txt")
+			throw StORMError.error("\(error)")
 		}
 	}
 	
