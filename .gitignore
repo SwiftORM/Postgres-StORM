@@ -68,3 +68,6 @@ Packages/
 *.xcodeproj/
 docs/
 buildlinux
+Package.swift.orig
+/.packages_lin
+/.build_lin
