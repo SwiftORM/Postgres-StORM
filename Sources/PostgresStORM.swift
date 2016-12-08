@@ -44,7 +44,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 	}
 
 	private func printDebug(_ statement: String, _ params: [String]) {
-		if StORMdebug { LogFile.error("StORM Debug: \(statement) : \(params.joined(separator: ", "))", logFile: "./StORMlog.txt") }
+		if StORMdebug { LogFile.debug("StORM Debug: \(statement) : \(params.joined(separator: ", "))", logFile: "./StORMlog.txt") }
 	}
 
 	// Internal function which executes statements, with parameter binding
