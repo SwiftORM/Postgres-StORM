@@ -12,6 +12,22 @@ import PerfectLogger
 /// Provides select functions as an extension to the main class.
 extension PostgresStORM {
 
+	/// Retrieves all rows in the table, only limited by the cursor (9,999,999 rows)
+	public func findAll() throws {
+		do {
+			let cursor = StORMCursor(limit: 9999999,offset: 0)
+			try select(
+				columns: [],
+				whereclause: "1",
+				params: [],
+				orderby: [],
+				cursor: cursor
+			)
+		} catch {
+			throw StORMError.error("\(error)")
+		}
+	}
+
 	/// Select function with specific where clause.
 	/// Parameterized statements are used, so all params should be passed in using the [Any] params array.
 	/// The whereclause should be specified in the following format: "name = $1 AND email LIKE $2"
