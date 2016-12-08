@@ -9,8 +9,7 @@
 import PerfectLib
 import StORM
 
-// TODO:  detect response and return t/f as appropriate
-
+/// Performs delete-specific functions as an extension
 extension PostgresStORM {
 
 	func deleteSQL(_ table: String, idName: String = "id") -> String {

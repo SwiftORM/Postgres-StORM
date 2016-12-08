@@ -8,12 +8,13 @@
 
 import StORM
 
-
+/// An extention ot the main class that provides PostgreSQL-specific "upsert" functionality.
 extension PostgresStORM {
-	
+
+	/// Inserts the row with the specified data, on conflict (conflickkeys columns) it will perform an update.
+	/// Specify matching arrays of columns and parameters, and an array of conflict key columns.
 	public func upsert(cols: [String], params: [Any], conflictkeys: [String]) throws {
 
-		// PostgreSQL specific insert staement exec
 		var paramsString = [String]()
 		var substString = [String]()
 		var upsertString = [String]()
@@ -23,9 +24,7 @@ extension PostgresStORM {
 
 			if i >= conflictkeys.count {
 				upsertString.append("\"\(String(describing: cols[i]))\" = $\(i+1)")
-
 			}
-
 		}
 		let colsjoined = "\"" + cols.joined(separator: "\",\"") + "\""
 		let conflictcolsjoined = "\"" + conflictkeys.joined(separator: "\",\"") + "\""
@@ -36,7 +35,5 @@ extension PostgresStORM {
 			self.error = StORMError.error(error.localizedDescription)
 			throw error
 		}
-
 	}
-
 }

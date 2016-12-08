@@ -10,9 +10,11 @@ import StORM
 import PostgreSQL
 import PerfectLogger
 
+/// Base connector class, inheriting from StORMConnect.
+/// Provides connection services for the Database Provider
 open class PostgresConnect: StORMConnect {
 
-	// server connection
+	/// Server connection container
 	public let server = PGConnection()
 
 
@@ -42,7 +44,8 @@ open class PostgresConnect: StORMConnect {
 		return conn
 	}
 
-	// Initiates the connection
+	/// Opens the connection
+	/// If StORMdebug is true, the connection state will be output to console and to ./StORMlog.txt
 	public func open() {
 		let status = server.connectdb(self.connectionString())
 		if status != .ok {

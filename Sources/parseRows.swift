@@ -12,7 +12,10 @@ import PerfectLib
 import PerfectXML
 import Foundation
 
+/// Supplies the parseRows method extending the main class.
 extension PostgresStORM {
+	
+	/// parseRows takes the [String:Any] result and returns an array of StormRows
 	public func parseRows(_ result: PGResult) -> [StORMRow] {
 		var resultRows = [StORMRow]()
 

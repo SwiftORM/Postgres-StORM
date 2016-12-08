@@ -8,6 +8,8 @@
 
 import Foundation
 
+/// This is a reference function used to help the ORM class determine how to interpret field types from Postgres.
+/// The function is not meant for use outside this library.
 public func PostgresMap(_ i: Int) -> String {
 	switch i {
 	case 16: return "Bool"

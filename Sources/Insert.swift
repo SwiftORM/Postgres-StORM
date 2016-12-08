@@ -8,9 +8,10 @@
 
 import StORM
 
+/// Performs insert functions as an extension to the main class.
 extension PostgresStORM {
 
-
+	/// Insert function where the suppled data is in [(String, Any)] format.
 	@discardableResult
 	public func insert(_ data: [(String, Any)]) throws -> Any {
 
@@ -28,6 +29,7 @@ extension PostgresStORM {
 	}
 
 
+	/// Insert function where the suppled data is in matching arrays of columns and parameter values.
 	public func insert(cols: [String], params: [Any]) throws -> Any {
 		let (idname, _) = firstAsKey()
 		do {
@@ -37,6 +39,8 @@ extension PostgresStORM {
 		}
 	}
 
+
+	/// Insert function where the suppled data is in matching arrays of columns and parameter values, as well as specifying the name of the id column.
 	public func insert(cols: [String], params: [Any], idcolumn: String) throws -> Any {
 
 		// PostgreSQL specific insert staement exec

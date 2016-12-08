@@ -9,11 +9,10 @@
 
 import StORM
 
+/// Convenience methods extending the main class.
 extension PostgresStORM {
 
-	// create is in main PostgresStORM now.
-
-	/// Deletes one row, with an id
+	/// Deletes one row, with an id.
 	/// Presumes first property in class is the id.
 	public func delete() throws {
 		let (idname, idval) = firstAsKey()
@@ -25,6 +24,7 @@ extension PostgresStORM {
 		}
 	}
 
+	/// Deletes one row, with the id as set.
 	public func delete(_ id: Any) throws {
 		let (idname, _) = firstAsKey()
 		do {
@@ -35,6 +35,7 @@ extension PostgresStORM {
 		}
 	}
 
+	/// Retrieves a single row with the supplied ID.
 	public func get(_ id: Any) throws {
 		let (idname, _) = firstAsKey()
 		do {
@@ -44,6 +45,7 @@ extension PostgresStORM {
 		}
 	}
 
+	/// Retrieves a single row with the ID as set.
 	public func get() throws {
 		let (idname, idval) = firstAsKey()
 		do {
@@ -53,7 +55,7 @@ extension PostgresStORM {
 		}
 	}
 
-
+	/// Performs a find on mathing column name/value pairs.
 	public func find(_ data: [(String, Any)]) throws {
 		let (idname, _) = firstAsKey()
 

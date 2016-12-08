@@ -9,6 +9,7 @@
 import StORM
 import PostgreSQL
 
+/// An extension to the main class providing SQL statement functions
 extension PostgresStORM {
 
 	/// Execute Raw SQL (with parameter binding)
@@ -22,6 +23,9 @@ extension PostgresStORM {
 			throw error
 		}
 	}
+
+	/// Execute Raw SQL (with parameter binding)
+	/// Returns [StORMRow] (discardable)
 	@discardableResult
 	public func sqlRows(_ statement: String, params: [String]) throws -> [StORMRow] {
 		do {

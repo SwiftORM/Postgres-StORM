@@ -10,6 +10,12 @@ import StORM
 import PostgreSQL
 import PerfectLogger
 
+/// PostgresConnector sets the connection parameters for the PostgreSQL Server access
+/// Usage:
+/// PostgresConnector.host = "XXXXXX"
+/// PostgresConnector.username = "XXXXXX"
+/// PostgresConnector = "XXXXXX"
+/// PostgresConnector.port = 5432
 public struct PostgresConnector {
 
 	public static var host: String		= ""
@@ -22,14 +28,17 @@ public struct PostgresConnector {
 
 }
 
+/// SuperClass that inherits from the foundation "StORM" class.
+/// Provides PosgreSQL-specific ORM functionality to child classes
 open class PostgresStORM: StORM, StORMProtocol {
-	private var connection = PostgresConnect()
 
-
+	/// Table that the child object relates to in the database.
+	/// Defined as "open" as it is meant to be overridden by the child class.
 	open func table() -> String {
 		return "unset"
 	}
 
+	/// Empty initializer
 	override public init() {
 		super.init()
 	}
@@ -108,13 +117,20 @@ open class PostgresStORM: StORM, StORMProtocol {
 		return false
 	}
 
+
+	/// Generic "to" function
+	/// Defined as "open" as it is meant to be overridden by the child class.
+	///
+	/// Sample usage:
+	///		id				= this.data["id"] as? Int ?? 0
+	///		firstname		= this.data["firstname"] as? String ?? ""
+	///		lastname		= this.data["lastname"] as? String ?? ""
+	///		email			= this.data["email"] as? String ?? ""
 	open func to(_ this: StORMRow) {
-		//		id				= this.data["id"] as! Int
-		//		firstname		= this.data["firstname"] as! String
-		//		lastname		= this.data["lastname"] as! String
-		//		email			= this.data["email"] as! String
 	}
 
+	/// Generic "makeRow" function
+	/// Defined as "open" as it is meant to be overridden by the child class.
 	open func makeRow() {
 		guard self.results.rows.count > 0 else {
 			return
@@ -122,6 +138,10 @@ open class PostgresStORM: StORM, StORMProtocol {
 		self.to(self.results.rows[0])
 	}
 
+	/// Standard "Save" function.
+	/// Designed as "open" so it can be overriden and customized.
+	/// If an ID has been defined, save() will perform an updae, otherwise a new document is created.
+	/// On error can throw a StORMError error.
 	@discardableResult
 	open func save() throws {
 		do {
@@ -135,6 +155,12 @@ open class PostgresStORM: StORM, StORMProtocol {
 			throw StORMError.error("\(error)")
 		}
 	}
+
+	/// Alternate "Save" function.
+	/// This save method will use the supplied "set" to assign or otherwise process the returned id.
+	/// Designed as "open" so it can be overriden and customized.
+	/// If an ID has been defined, save() will perform an updae, otherwise a new document is created.
+	/// On error can throw a StORMError error.
 	@discardableResult
 	open func save(set: (_ id: Any)->Void) throws {
 		do {
@@ -150,6 +176,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 		}
 	}
 
+	/// Unlike the save() methods, create() mandates the addition of a new document, regardless of whether an ID has been set or specified.
 	@discardableResult
 	override open func create() throws {
 		do {
@@ -166,6 +193,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 	}
 
 	/// Table Creation
+	/// Requires the connection to be configured, as well as a valid "table" property to have been set in the class
 	@discardableResult
 	open func setup(_ str: String = "") throws {
 		LogFile.info("Running setup: \(table())", logFile: "./StORMlog.txt")
