@@ -8,6 +8,7 @@
 
 import StORM
 import PostgreSQL
+import PerfectLogger
 
 /// An extension to the main class providing SQL statement functions
 extension PostgresStORM {
@@ -19,7 +20,8 @@ extension PostgresStORM {
 		do {
 			return try exec(statement, params: params)
 		} catch {
-			self.error = StORMError.error(error.localizedDescription)
+			LogFile.error("Error msg: \(error)", logFile: "./StORMlog.txt")
+			self.error = StORMError.error("\(error)")
 			throw error
 		}
 	}
@@ -31,7 +33,8 @@ extension PostgresStORM {
 		do {
 			return try execRows(statement, params: params)
 		} catch {
-			self.error = StORMError.error(error.localizedDescription)
+			LogFile.error("Error msg: \(error)", logFile: "./StORMlog.txt")
+			self.error = StORMError.error("\(error)")
 			throw error
 		}
 	}

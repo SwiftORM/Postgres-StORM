@@ -8,6 +8,7 @@
 
 
 import StORM
+import PerfectLogger
 
 /// Convenience methods extending the main class.
 extension PostgresStORM {
@@ -19,7 +20,8 @@ extension PostgresStORM {
 		do {
 			try exec(deleteSQL(self.table(), idName: idname), params: [String(describing: idval)])
 		} catch {
-			self.error = StORMError.error(error.localizedDescription)
+			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			self.error = StORMError.error("\(error)")
 			throw error
 		}
 	}
@@ -30,7 +32,8 @@ extension PostgresStORM {
 		do {
 			try exec(deleteSQL(self.table(), idName: idname), params: [String(describing: id)])
 		} catch {
-			self.error = StORMError.error(error.localizedDescription)
+			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			self.error = StORMError.error("\(error)")
 			throw error
 		}
 	}
@@ -41,6 +44,7 @@ extension PostgresStORM {
 		do {
 			try select(whereclause: "\"\(idname)\" = $1", params: [id], orderby: [])
 		} catch {
+			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
 			throw error
 		}
 	}
@@ -51,6 +55,7 @@ extension PostgresStORM {
 		do {
 			try select(whereclause: "\"\(idname)\" = $1", params: ["\(idval)"], orderby: [])
 		} catch {
+			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
 			throw error
 		}
 	}
@@ -69,7 +74,8 @@ extension PostgresStORM {
 		do {
 			try select(whereclause: set.joined(separator: " AND "), params: paramsString, orderby: [idname])
 		} catch {
-			print("Error detacted: \(error)")
+			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			throw error
 		}
 
 	}

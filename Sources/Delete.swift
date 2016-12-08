@@ -8,6 +8,7 @@
 
 import PerfectLib
 import StORM
+import PerfectLogger
 
 /// Performs delete-specific functions as an extension
 extension PostgresStORM {
@@ -22,7 +23,8 @@ extension PostgresStORM {
 		do {
 			try exec(deleteSQL(self.table(), idName: idName), params: [String(id)])
 		} catch {
-			self.error = StORMError.error(error.localizedDescription)
+			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			self.error = StORMError.error("\(error)")
 			throw error
 		}
 		return true
@@ -34,7 +36,8 @@ extension PostgresStORM {
 		do {
 			try exec(deleteSQL(self.table(), idName: idName), params: [id])
 		} catch {
-			self.error = StORMError.error(error.localizedDescription)
+			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			self.error = StORMError.error("\(error)")
 			throw error
 		}
 		return true
@@ -46,7 +49,8 @@ extension PostgresStORM {
 		do {
 			try exec(deleteSQL(self.table(), idName: idName), params: [id.string])
 		} catch {
-			self.error = StORMError.error(error.localizedDescription)
+			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			self.error = StORMError.error("\(error)")
 			throw error
 		}
 		return true

@@ -50,7 +50,7 @@ open class PostgresConnect: StORMConnect {
 		let status = server.connectdb(self.connectionString())
 		if status != .ok {
 			resultCode = .error("\(status)")
-			if StORMdebug { LogFile.info("Postgres conn error: \(status)", logFile: "./StORMlog.txt") }
+			if StORMdebug { LogFile.error("Postgres conn error: \(status)", logFile: "./StORMlog.txt") }
 		} else {
 			if StORMdebug { LogFile.info("Postgres conn state: ok", logFile: "./StORMlog.txt") }
 			resultCode = .noError

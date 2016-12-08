@@ -44,7 +44,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 	}
 
 	private func printDebug(_ statement: String, _ params: [String]) {
-		if StORMdebug { print("StORM Debug: \(statement) : \(params.joined(separator: ", "))") }
+		if StORMdebug { LogFile.error("StORM Debug: \(statement) : \(params.joined(separator: ", "))", logFile: "./StORMlog.txt") }
 	}
 
 	// Internal function which executes statements, with parameter binding
@@ -152,6 +152,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 				try update(data: asData(1), idName: idname, idValue: idval)
 			}
 		} catch {
+			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
 			throw StORMError.error("\(error)")
 		}
 	}
@@ -172,6 +173,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 				try update(data: asData(1), idName: idname, idValue: idval)
 			}
 		} catch {
+			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
 			throw StORMError.error("\(error)")
 		}
 	}
@@ -182,6 +184,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 		do {
 			try insert(asData())
 		} catch {
+			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
 			throw StORMError.error("\(error)")
 		}
 	}
@@ -239,7 +242,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 		do {
 			try sql(createStatement, params: [])
 		} catch {
-			LogFile.info("Error msg: \(error)", logFile: "./StORMlog.txt")
+			LogFile.error("Error msg: \(error)", logFile: "./StORMlog.txt")
 			throw StORMError.error("\(error)")
 		}
 	}
