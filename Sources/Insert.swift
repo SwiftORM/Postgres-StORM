@@ -24,7 +24,7 @@ extension PostgresStORM {
 		do {
 			return try insert(cols: keys, params: vals)
 		} catch {
-			throw StORMError.error(error.localizedDescription)
+			throw StORMError.error("\(error)")
 		}
 	}
 
@@ -35,7 +35,7 @@ extension PostgresStORM {
 		do {
 			return try insert(cols: cols, params: params, idcolumn: idname)
 		} catch {
-			throw StORMError.error(error.localizedDescription)
+			throw StORMError.error("\(error)")
 		}
 	}
 
@@ -43,7 +43,6 @@ extension PostgresStORM {
 	/// Insert function where the suppled data is in matching arrays of columns and parameter values, as well as specifying the name of the id column.
 	public func insert(cols: [String], params: [Any], idcolumn: String) throws -> Any {
 
-		// PostgreSQL specific insert staement exec
 		var paramString = [String]()
 		var substString = [String]()
 		for i in 0..<params.count {
@@ -60,7 +59,7 @@ extension PostgresStORM {
 			let response = try exec(str, params: paramString)
 			return parseRows(response)[0].data[idcolumn]!
 		} catch {
-			self.error = StORMError.error(error.localizedDescription)
+			self.error = StORMError.error("\(error)")
 			throw error
 		}
 

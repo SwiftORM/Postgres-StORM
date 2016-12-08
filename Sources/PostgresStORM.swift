@@ -14,7 +14,7 @@ import PerfectLogger
 /// Usage:
 /// PostgresConnector.host = "XXXXXX"
 /// PostgresConnector.username = "XXXXXX"
-/// PostgresConnector = "XXXXXX"
+/// PostgresConnector.password = "XXXXXX"
 /// PostgresConnector.port = 5432
 public struct PostgresConnector {
 
