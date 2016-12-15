@@ -108,7 +108,7 @@ extension PostgresStORM {
 
 			if numrecords == 0 { return }
 			// SELECT ASSEMBLE
-			var str = "SELECT \(clauseSelectList) FROM \(table()) \(clauseWhere) \(clauseOrder)"
+			var str = "SELECT \(clauseSelectList.lowercased()) FROM \(table()) \(clauseWhere) \(clauseOrder)"
 
 
 			// TODO: Add joins, having, groupby

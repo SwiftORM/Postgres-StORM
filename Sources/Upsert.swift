@@ -29,7 +29,7 @@ extension PostgresStORM {
 		}
 		let colsjoined = "\"" + cols.joined(separator: "\",\"") + "\""
 		let conflictcolsjoined = "\"" + conflictkeys.joined(separator: "\",\"") + "\""
-		let str = "INSERT INTO \(self.table()) (\(colsjoined)) VALUES(\(substString.joined(separator: ","))) ON CONFLICT (\(conflictcolsjoined)) DO UPDATE SET \(upsertString.joined(separator: ","))"
+		let str = "INSERT INTO \(self.table()) (\(colsjoined.lowercased())) VALUES(\(substString.joined(separator: ","))) ON CONFLICT (\(conflictcolsjoined.lowercased())) DO UPDATE SET \(upsertString.joined(separator: ","))"
 		do {
 			try exec(str, params: paramsString)
 		} catch {

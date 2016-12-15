@@ -14,7 +14,7 @@ import PerfectLogger
 extension PostgresStORM {
 
 	func deleteSQL(_ table: String, idName: String = "id") -> String {
-		return "DELETE FROM \(table) WHERE \"\(idName)\" = $1"
+		return "DELETE FROM \(table) WHERE \"\(idName.lowercased())\" = $1"
 	}
 
 	/// Deletes one row, with an id as an integer

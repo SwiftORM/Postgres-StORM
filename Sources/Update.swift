@@ -22,7 +22,7 @@ extension PostgresStORM {
 		var set = [String]()
 		for i in 0..<params.count {
 			paramsString.append(String(describing: params[i]))
-			set.append("\"\(cols[i])\" = $\(i+1)")
+			set.append("\"\(cols[i].lowercased())\" = $\(i+1)")
 		}
 		paramsString.append(String(describing: idValue))
 
@@ -48,7 +48,7 @@ extension PostgresStORM {
 		var keys = [String]()
 		var vals = [String]()
 		for i in 0..<data.count {
-			keys.append(data[i].0)
+			keys.append(data[i].0.lowercased())
 			vals.append(String(describing: data[i].1))
 		}
 		do {
