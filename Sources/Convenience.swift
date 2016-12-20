@@ -18,7 +18,7 @@ extension PostgresStORM {
 	public func delete() throws {
 		let (idname, idval) = firstAsKey()
 		do {
-			try exec(deleteSQL(self.table(), idName: idname), params: [String(describing: idval)])
+			try exec(deleteSQL(self.table(), idName: idname.lowercased()), params: [String(describing: idval)])
 		} catch {
 			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
 			self.error = StORMError.error("\(error)")
@@ -30,7 +30,7 @@ extension PostgresStORM {
 	public func delete(_ id: Any) throws {
 		let (idname, _) = firstAsKey()
 		do {
-			try exec(deleteSQL(self.table(), idName: idname), params: [String(describing: id)])
+			try exec(deleteSQL(self.table(), idName: idname.lowercased()), params: [String(describing: id)])
 		} catch {
 			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
 			self.error = StORMError.error("\(error)")
@@ -42,7 +42,7 @@ extension PostgresStORM {
 	public func get(_ id: Any) throws {
 		let (idname, _) = firstAsKey()
 		do {
-			try select(whereclause: "\"\(idname)\" = $1", params: [id], orderby: [])
+			try select(whereclause: "\"\(idname.lowercased())\" = $1", params: [id], orderby: [])
 		} catch {
 			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
 			throw error
@@ -53,7 +53,7 @@ extension PostgresStORM {
 	public func get() throws {
 		let (idname, idval) = firstAsKey()
 		do {
-			try select(whereclause: "\"\(idname)\" = $1", params: ["\(idval)"], orderby: [])
+			try select(whereclause: "\"\(idname.lowercased())\" = $1", params: ["\(idval)"], orderby: [])
 		} catch {
 			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
 			throw error
@@ -68,7 +68,7 @@ extension PostgresStORM {
 		var set = [String]()
 		for i in 0..<data.count {
 			paramsString.append("\(data[i].1)")
-			set.append("\(data[i].0) = $\(i+1)")
+			set.append("\(data[i].0.lowercased()) = $\(i+1)")
 		}
 
 		do {
