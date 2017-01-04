@@ -79,4 +79,28 @@ extension PostgresStORM {
 		}
 
 	}
+
+
+	/// Performs a find on mathing column name/value pairs.
+	public func find(_ data: [String: Any]) throws {
+		let (idname, _) = firstAsKey()
+
+		var paramsString = [String]()
+		var set = [String]()
+		var counter = 0
+		for i in data.keys {
+			paramsString.append(data[i] as! String)
+			set.append("\(i.lowercased()) = $\(counter+1)")
+			counter += 1
+		}
+
+		do {
+			try select(whereclause: set.joined(separator: " AND "), params: paramsString, orderby: [idname])
+		} catch {
+			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			throw error
+		}
+
+	}
+
 }
