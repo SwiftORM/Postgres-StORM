@@ -14,7 +14,7 @@ class User: PostgresStORM {
 
 
 	override open func table() -> String {
-		return "users"
+		return "users_test"
 	}
 
 	override func to(_ this: StORMRow) {
@@ -38,34 +38,31 @@ class User: PostgresStORM {
 
 class PostgresStORMTests: XCTestCase {
 
-	#if os(Linux)
-	var connect = PostgresConnect(
-		host: ProcessInfo.processInfo.environment["HOST"]!,
-		username: ProcessInfo.processInfo.environment["USER"]!,
-		password: ProcessInfo.processInfo.environment["PASS"]!,
-		database: ProcessInfo.processInfo.environment["DB"]!,
-		port: Int(ProcessInfo.processInfo.environment["PORT"]!)!
-	)
-	#else
-	var connect = PostgresConnect(
-		host: "localhost",
-		username: "perfect",
-		password: "perfect",
-		database: "perfect_testing",
-		port: 32768
-	)
-	#endif
-
-
 	override func setUp() {
 		super.setUp()
+		#if os(Linux)
+
+			PostgresConnector.host		= ProcessInfo.processInfo.environment["HOST"]!
+			PostgresConnector.username	= ProcessInfo.processInfo.environment["USER"]!
+			PostgresConnector.password	= ProcessInfo.processInfo.environment["PASS"]!
+			PostgresConnector.database	= ProcessInfo.processInfo.environment["DB"]!
+			PostgresConnector.port		= Int(ProcessInfo.processInfo.environment["PORT"]!)!
+
+		#else
+			PostgresConnector.host		= "localhost"
+			PostgresConnector.username	= "perfect"
+			PostgresConnector.password	= "perfect"
+			PostgresConnector.database	= "perfect_testing"
+			PostgresConnector.port		= 5432
+		#endif
+		let obj = User()
+		try? obj.setup()
 	}
 
 	/* =============================================================================================
 	Save - New
 	============================================================================================= */
 	func testSaveNew() {
-		print("postgresql://\(connect.credentials.username):\(connect.credentials.password)@\(connect.credentials.host):\(connect.credentials.port)/\(connect.database)")
 
 		let obj = User()
 		obj.firstname = "X"
@@ -145,7 +142,7 @@ class PostgresStORMTests: XCTestCase {
 			XCTFail(String(describing: error))
 		}
 
-		let obj2 = User(connect)
+		let obj2 = User()
 
 		do {
 			try obj2.get(obj.id)
@@ -209,13 +206,9 @@ class PostgresStORMTests: XCTestCase {
 
 		do {
 			try obj.get(1111111)
-			XCTFail("Should have failed (record not found)")
+			XCTAssert(obj.results.cursorData.totalRecords == 0, "Object should have found no rows")
 		} catch {
-			if case .noRecordFound = obj.error {
-				XCTFail("Fall through... Should have failed (record not found): \(obj.error.string())")
-			}
-			print("^ Ignore this error, that is expected and should show 'ERROR:  not found'")
-			// test passes - should have a failure!
+			XCTFail(error as! String)
 		}
 	}
 
@@ -232,13 +225,9 @@ class PostgresStORMTests: XCTestCase {
 		obj.id = 1111111
 		do {
 			try obj.get()
-			XCTFail("Should have failed (record not found)")
+			XCTAssert(obj.results.cursorData.totalRecords == 0, "Object should have found no rows")
 		} catch {
-			if case .noRecordFound = obj.error {
-				XCTFail("Fall through... Should have failed (record not found): \(obj.error.string())")
-			}
-			print("^ Ignore this error, that is expected and should show 'ERROR:  not found'")
-			// test passes - should have a failure!
+			XCTFail(error as! String)
 		}
 	}
 
@@ -249,7 +238,7 @@ class PostgresStORMTests: XCTestCase {
 	============================================================================================= */
 	func testCheckDeleteSQL() {
 		let obj = User()
-		XCTAssert(obj.deleteSQL("test", idName: "testid") == "DELETE FROM test WHERE testid = $1", "DeleteSQL statement is not correct")
+		XCTAssert(obj.deleteSQL("test", idName: "testid") == "DELETE FROM test WHERE \"testid\" = $1", "DeleteSQL statement is not correct")
 
 	}
 
