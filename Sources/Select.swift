@@ -18,7 +18,7 @@ extension PostgresStORM {
 			let cursor = StORMCursor(limit: 9999999,offset: 0)
 			try select(
 				columns: [],
-				whereclause: "1",
+				whereclause: "true",
 				params: [],
 				orderby: [],
 				cursor: cursor

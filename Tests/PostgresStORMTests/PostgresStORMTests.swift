@@ -257,7 +257,21 @@ class PostgresStORMTests: XCTestCase {
 			XCTFail("Find error: \(obj.error.string())")
 		}
 	}
+	
+	/* =============================================================================================
+	FindAll
+	============================================================================================= */
+	func testFindAll() {
+		let obj = User()
 
+		do {
+			try obj.findAll()
+			XCTAssert(obj.results.cursorData.totalRecords > 0, "Object should have found more than zero rows")
+		} catch {
+			XCTFail("findAll error: \(obj.error.string())")
+		}
+	}
+	
 
 
 
@@ -272,7 +286,8 @@ class PostgresStORMTests: XCTestCase {
 			("testGetByPassingIDnoRecord", testGetByPassingIDnoRecord),
 			("testGetBySettingIDnoRecord", testGetBySettingIDnoRecord),
 			("testCheckDeleteSQL", testCheckDeleteSQL),
-			("testFind", testFind)
+			("testFind", testFind),
+			("testFindAll", testFindAll)
 		]
 	}
 
