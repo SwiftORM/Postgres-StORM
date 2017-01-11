@@ -209,7 +209,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 					continue
 				}
 				var verbage = ""
-				if !key.hasPrefix("internal_") {
+				if !key.hasPrefix("internal_") && !key.hasPrefix("_") {
 					verbage = "\(key.lowercased()) "
 					if child.value is Int && opt.count == 0 {
 						verbage += "serial"

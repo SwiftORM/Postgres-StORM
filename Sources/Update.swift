@@ -26,7 +26,7 @@ extension PostgresStORM {
 		}
 		paramsString.append(String(describing: idValue))
 
-		let str = "UPDATE \(self.table()) SET \(set.joined(separator: ", ")) WHERE \"\(idName)\" = $\(params.count+1)"
+		let str = "UPDATE \(self.table()) SET \(set.joined(separator: ", ")) WHERE \"\(idName.lowercased())\" = $\(params.count+1)"
 
 		do {
 			try exec(str, params: paramsString)
