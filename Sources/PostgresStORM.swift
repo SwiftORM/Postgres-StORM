@@ -64,7 +64,7 @@ open class PostgresStORM: StORM, StORMProtocol {
     @discardableResult
     func exec(_ statement: String, params: [String]) throws -> PGResult {
         
-        if !PostgresConnector.host.isEmpty {
+        if self.connection.database.isEmpty && !PostgresConnector.host.isEmpty {
             self.connection = PostgresConnect(host: PostgresConnector.host,
                                               username: PostgresConnector.username,
                                               password: PostgresConnector.password,
@@ -93,7 +93,7 @@ open class PostgresStORM: StORM, StORMProtocol {
     // Returns a processed row set
     @discardableResult
     func execRows(_ statement: String, params: [String]) throws -> [StORMRow] {
-        if !PostgresConnector.host.isEmpty {
+        if self.connection.database.isEmpty && !PostgresConnector.host.isEmpty {
             self.connection = PostgresConnect(host: PostgresConnector.host,
                                               username: PostgresConnector.username,
                                               password: PostgresConnector.password,
