@@ -5,6 +5,9 @@
 //  Created by Jonathan Guthrie on 2016-10-03.
 //
 //
+// Modified by Craig Counterman starting 2017-04-02 to add connector as init option as in SQLite
+// 
+
 
 import StORM
 import PostgreSQL
