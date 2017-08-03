@@ -9,19 +9,21 @@ class User: PostgresStORM {
 	// NOTE: First param in class should be the ID.
 	var id				: Int = 0
 	var firstname		: String = ""
-	var lastname			: String = ""
+	var lastname		: String = ""
 	var email			: String = ""
+	var stringarray		= [String]()
 
 
 	override open func table() -> String {
-		return "users_test"
+		return "users_test1"
 	}
 
 	override func to(_ this: StORMRow) {
-		id				= this.data["id"] as! Int
-		firstname		= this.data["firstname"] as! String
-		lastname		    = this.data["lastname"] as! String
-		email			= this.data["email"] as! String
+		id				= this.data["id"] as? Int ?? 0
+		firstname		= this.data["firstname"] as? String ?? ""
+		lastname		= this.data["lastname"] as? String ?? ""
+		email			= this.data["email"] as? String ?? ""
+		stringarray		= toArrayString(this.data["stringarray"] as? String ?? "")
 	}
 
 	func rows() -> [User] {
@@ -57,6 +59,7 @@ class PostgresStORMTests: XCTestCase {
 		#endif
 		let obj = User()
 		try? obj.setup()
+		StORMdebug = true
 	}
 
 	/* =============================================================================================
@@ -273,6 +276,32 @@ class PostgresStORMTests: XCTestCase {
 	}
 	
 
+	/* =============================================================================================
+	Test array set & retrieve
+	============================================================================================= */
+	func testArray() {
+		let obj = User()
+		obj.stringarray = ["a", "b", "zee"]
+
+		do {
+			try obj.save {id in obj.id = id as! Int }
+		} catch {
+			XCTFail(String(describing: error))
+		}
+
+		let obj2 = User()
+
+		do {
+			try obj2.get(obj.id)
+			try obj.delete()
+			try obj2.delete()
+		} catch {
+			XCTFail(String(describing: error))
+		}
+		XCTAssert(obj.id == obj2.id, "Object not the same (id)")
+		XCTAssert(obj.stringarray == obj2.stringarray, "Object not the same (stringarray)")
+	}
+	
 
 
 	static var allTests : [(String, (PostgresStORMTests) -> () throws -> Void)] {
@@ -287,7 +316,8 @@ class PostgresStORMTests: XCTestCase {
 			("testGetBySettingIDnoRecord", testGetBySettingIDnoRecord),
 			("testCheckDeleteSQL", testCheckDeleteSQL),
 			("testFind", testFind),
-			("testFindAll", testFindAll)
+			("testFindAll", testFindAll),
+			("testArray", testArray)
 		]
 	}
 
