@@ -190,6 +190,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 		}
 	}
 
+	
 	/// Table Creation (alias for setup)
 	
 	open func setupTable(_ str: String = "") throws {
@@ -220,6 +221,9 @@ open class PostgresStORM: StORM, StORMProtocol {
 						verbage += "bool"
 					} else if child.value is [String:Any] {
 						verbage += "jsonb"
+					// Adding support for arrays
+					} else if child.value is [String] || child.value is [Int] || child.value is [Any] {
+						verbage += "text" // they are stored as comma delimited arrays
 					} else if child.value is Double {
 						verbage += "float8"
 					} else if child.value is UInt || child.value is UInt8 || child.value is UInt16 || child.value is UInt32 || child.value is UInt64 {
