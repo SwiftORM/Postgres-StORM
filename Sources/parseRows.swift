@@ -36,14 +36,18 @@ extension PostgresStORM {
 				case "json":
 					let output = result.getFieldString(tupleIndex: x, fieldIndex: f)
 					do {
-						params[result.fieldName(index: f)!] = try output?.jsonDecode() as? [String:Any]
+                        let decode = try output?.jsonDecode()
+                        // Here we are first trying to cast into the traditional json return.  However, when using the json_agg function, it will return an array.  The following considers both cases.
+                        params[result.fieldName(index: f)!] = decode as? [String:Any] ?? decode as? [[String:Any]]
 					} catch {
 						params[result.fieldName(index: f)!] = [String:Any]()
 					}
 				case "jsonb":
 					let output = result.getFieldString(tupleIndex: x, fieldIndex: f)
 					do {
-						params[result.fieldName(index: f)!] = try output?.jsonDecode() as? [String:Any]
+                        let decode = try output?.jsonDecode()
+                        // Here we are first trying to cast into the traditional json return.  However, when using the jsonb_agg function, it will return an array.  The following considers both cases.
+						params[result.fieldName(index: f)!] = decode as? [String:Any] ?? decode as? [[String:Any]]
 					} catch {
 						params[result.fieldName(index: f)!] = [String:Any]()
 					}
