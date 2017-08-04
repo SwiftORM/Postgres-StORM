@@ -302,7 +302,39 @@ class PostgresStORMTests: XCTestCase {
 		XCTAssert(obj.stringarray == obj2.stringarray, "Object not the same (stringarray)")
 	}
 	
-
+    /* =============================================================================================
+     parseRows (JSON Aggregation)
+     ============================================================================================= */
+    func testJsonAggregation() {
+        
+        // In the parseRows function we changed to cast into either [String:Any] type, OR [[String:Any]] type as aggregated JSON type.
+        
+        let encodedJSONArray = "[{\"id\":\"101\",\"name\":\"Pushkar\",\"salary\":\"5000\"}, {\"id\":\"102\",\"name\":\"Rahul\",\"salary\":\"4000\"},{\"id\":\"103\",\"name\":\"tanveer\",\"salary\":\"56678\"}]"
+        
+        do {
+            let decodedJSONArray    = try encodedJSONArray.jsonDecode()
+            
+            if decodedJSONArray as? [[String:Any]] == nil {
+                XCTAssert(false, "Failed to cast decoded JSON to array of type [String : Any]")
+            }
+            
+        } catch {
+            XCTFail("Failed to decode array of JSON.")
+        }
+        
+        let encodedJSON = "{\"id\":\"101\",\"name\":\"Pushkar\",\"salary\":\"5000\"}"
+        
+        do {
+            let decodedJSON         = try encodedJSON.jsonDecode()
+            
+            if decodedJSON as? [String:Any] == nil {
+                XCTAssert(false, "Failed to cast decoded JSON into [String:Any] type.")
+            }
+        } catch {
+            XCTFail("Failed to decode JSON.")
+        }
+    
+    }
 
 	static var allTests : [(String, (PostgresStORMTests) -> () throws -> Void)] {
 		return [
@@ -317,7 +349,8 @@ class PostgresStORMTests: XCTestCase {
 			("testCheckDeleteSQL", testCheckDeleteSQL),
 			("testFind", testFind),
 			("testFindAll", testFindAll),
-			("testArray", testArray)
+			("testArray", testArray),
+            ("testJsonAggregation", testJsonAggregation)
 		]
 	}
 
