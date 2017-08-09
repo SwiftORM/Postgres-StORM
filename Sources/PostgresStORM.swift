@@ -47,7 +47,11 @@ open class PostgresStORM: StORM, StORMProtocol {
 	private func printDebug(_ statement: String, _ params: [String]) {
 		if StORMdebug { LogFile.debug("StORM Debug: \(statement) : \(params.joined(separator: ", "))", logFile: "./StORMlog.txt") }
 	}
-
+	
+	open func modify(data: [(String, Any)]) -> [(String, Any)] {
+		return data
+	}
+	
 	// Internal function which executes statements, with parameter binding
 	// Returns raw result
 	@discardableResult
@@ -147,10 +151,10 @@ open class PostgresStORM: StORM, StORMProtocol {
 	open func save() throws {
 		do {
 			if keyIsEmpty() {
-				try insert(asData(1))
+				try insert(modify(data: asData(1)))
 			} else {
 				let (idname, idval) = firstAsKey()
-				try update(data: asData(1), idName: idname, idValue: idval)
+				try update(data: modify(data: asData(1)), idName: idname, idValue: idval)
 			}
 		} catch {
 			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
@@ -167,11 +171,11 @@ open class PostgresStORM: StORM, StORMProtocol {
 	open func save(set: (_ id: Any)->Void) throws {
 		do {
 			if keyIsEmpty() {
-				let setId = try insert(asData(1))
+				let setId = try insert(modify(data: asData(1)))
 				set(setId)
 			} else {
 				let (idname, idval) = firstAsKey()
-				try update(data: asData(1), idName: idname, idValue: idval)
+				try update(data: modify(data: asData(1)), idName: idname, idValue: idval)
 			}
 		} catch {
 			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
@@ -183,7 +187,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 	
 	override open func create() throws {
 		do {
-			try insert(asData())
+			try insert(modify(data: asData()))
 		} catch {
 			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
 			throw StORMError.error("\(error)")
@@ -253,5 +257,3 @@ open class PostgresStORM: StORM, StORMProtocol {
 	}
 	
 }
-
-
