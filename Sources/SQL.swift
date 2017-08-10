@@ -20,8 +20,10 @@ extension PostgresStORM {
 		do {
 			return try exec(statement, params: params)
 		} catch {
-			LogFile.error("Error msg: \(error)", logFile: "./StORMlog.txt")
-			self.error = StORMError.error("\(error)")
+			if !PostgresConnector.quiet {
+				LogFile.error("Error msg: \(error)", logFile: "./StORMlog.txt")
+				self.error = StORMError.error("\(error)")
+			}
 			throw error
 		}
 	}
@@ -33,9 +35,12 @@ extension PostgresStORM {
 		do {
 			return try execRows(statement, params: params)
 		} catch {
-			LogFile.error("Error msg: \(error)", logFile: "./StORMlog.txt")
-			self.error = StORMError.error("\(error)")
+			if !PostgresConnector.quiet {
+				LogFile.error("Error msg: \(error)", logFile: "./StORMlog.txt")
+				self.error = StORMError.error("\(error)")
+			}
 			throw error
 		}
 	}
 }
+

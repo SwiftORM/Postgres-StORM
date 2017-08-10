@@ -24,6 +24,8 @@ public struct PostgresConnector {
 	public static var database: String	= ""
 	public static var port: Int			= 5432
 
+	public static var quiet: Bool		= false
+
 	private init(){}
 
 }
@@ -111,7 +113,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 
 
 	func isError() -> Bool {
-		if errorMsg.contains(string: "ERROR") {
+		if errorMsg.contains(string: "ERROR"), !PostgresConnector.quiet {
 			print(errorMsg)
 			return true
 		}
@@ -143,7 +145,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 	/// Designed as "open" so it can be overriden and customized.
 	/// If an ID has been defined, save() will perform an updae, otherwise a new document is created.
 	/// On error can throw a StORMError error.
-	
+
 	open func save() throws {
 		do {
 			if keyIsEmpty() {
@@ -163,7 +165,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 	/// Designed as "open" so it can be overriden and customized.
 	/// If an ID has been defined, save() will perform an updae, otherwise a new document is created.
 	/// On error can throw a StORMError error.
-	
+
 	open func save(set: (_ id: Any)->Void) throws {
 		do {
 			if keyIsEmpty() {
@@ -180,7 +182,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 	}
 
 	/// Unlike the save() methods, create() mandates the addition of a new document, regardless of whether an ID has been set or specified.
-	
+
 	override open func create() throws {
 		do {
 			try insert(asData())
@@ -190,16 +192,16 @@ open class PostgresStORM: StORM, StORMProtocol {
 		}
 	}
 
-	
+
 	/// Table Creation (alias for setup)
-	
+
 	open func setupTable(_ str: String = "") throws {
 		try setup(str)
 	}
 
 	/// Table Creation
 	/// Requires the connection to be configured, as well as a valid "table" property to have been set in the class
-	
+
 	open func setup(_ str: String = "") throws {
 		LogFile.info("Running setup: \(table())", logFile: "./StORMlog.txt")
 		var createStatement = str
@@ -251,7 +253,7 @@ open class PostgresStORM: StORM, StORMProtocol {
 			throw StORMError.error("\(error)")
 		}
 	}
-	
+
 }
 
 
