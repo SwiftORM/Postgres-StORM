@@ -10,13 +10,17 @@ import StORM
 import PostgreSQL
 import PerfectLogger
 
+public enum PostgresConnectionState {
+	case good, bad
+}
+
 /// Base connector class, inheriting from StORMConnect.
 /// Provides connection services for the Database Provider
 open class PostgresConnect: StORMConnect {
+	public var state: PostgresConnectionState = .good
 
 	/// Server connection container
 	public let server = PGConnection()
-
 
 	/// Init with no credentials
 	override init() {
@@ -26,11 +30,11 @@ open class PostgresConnect: StORMConnect {
 
 	/// Init with credentials
 	public init(
-	            host: String,
-	            username: String = "",
-	            password: String = "",
-	            database: String = "",
-	            port: Int = 5432) {
+		host: String,
+		username: String = "",
+		password: String = "",
+		database: String = "",
+		port: Int = 5432) {
 		super.init()
 		self.database = database
 		self.datasource = .Postgres
@@ -49,6 +53,7 @@ open class PostgresConnect: StORMConnect {
 	public func open() {
 		let status = server.connectdb(self.connectionString())
 		if status != .ok {
+			state = .bad
 			resultCode = .error("\(status)")
 			if StORMdebug { LogFile.error("Postgres conn error: \(status)", logFile: "./StORMlog.txt") }
 		} else {
