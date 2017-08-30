@@ -28,6 +28,23 @@ extension PostgresStORM {
 		}
 	}
 
+	/// Retrieves one rows in the table, sorted by order column
+	public func findOne(orderBy: String) throws {
+		do {
+			let cursor = StORMCursor(limit: 1,offset: 0)
+			try select(
+				columns: [],
+				whereclause: "true",
+				params: [],
+				orderby: [orderBy],
+				cursor: cursor
+			)
+			makeRow()
+		} catch {
+			throw StORMError.error("\(error)")
+		}
+	}
+
 	/// Select function with specific where clause.
 	/// Parameterized statements are used, so all params should be passed in using the [Any] params array.
 	/// The whereclause should be specified in the following format: "name = $1 AND email LIKE $2"
