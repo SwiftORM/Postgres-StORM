@@ -72,3 +72,5 @@ Package.swift.orig
 /.packages_lin
 /.build_lin
 Package.pins
+Package.resolved
+PADockerfile_build

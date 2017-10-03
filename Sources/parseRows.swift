@@ -7,7 +7,7 @@
 //
 
 import StORM
-import PostgreSQL
+import PerfectPostgreSQL
 import PerfectLib
 import PerfectXML
 import Foundation

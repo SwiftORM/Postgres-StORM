@@ -7,7 +7,7 @@
 //
 
 import StORM
-import PostgreSQL
+import PerfectPostgreSQL
 import PerfectLogger
 
 public enum PostgresConnectionState {

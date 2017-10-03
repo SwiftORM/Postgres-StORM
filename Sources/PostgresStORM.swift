@@ -7,7 +7,7 @@
 //
 
 import StORM
-import PostgreSQL
+import PerfectPostgreSQL
 import PerfectLogger
 
 /// PostgresConnector sets the connection parameters for the PostgreSQL Server access
