@@ -309,13 +309,34 @@ class PostgresStORMTests: XCTestCase {
 	FindAll
 	============================================================================================= */
 	func testFindAll() {
-		let obj = User()
-
+		// Ensure table is empty
 		do {
-			try obj.findAll()
-			XCTAssert(obj.results.cursorData.totalRecords > 0, "Object should have found more than zero rows")
-		} catch {
-			XCTFail("findAll error: \(obj.error.string())")
+			let obj = User()
+			let tableName = obj.table()
+			_ = try? obj.sql("DELETE FROM \(tableName)", params: [])
+		}
+
+		// Insert more rows than the StORMCursor().limit
+		for i in 0..<200 {
+			let obj = User()
+			obj.firstname = "Wintermute\(i)"
+			do {
+				try obj.save { id in obj.id = id as! Int }
+			} catch {
+				XCTFail(String(describing: error))
+			}
+		}
+		
+		// Check that all the rows are returned
+		do {
+			let obj = User()
+			do {
+				try obj.findAll()
+				XCTAssertEqual(obj.results.rows.count, 200, "Object should have found the all the rows just inserted. Not limited by the default cursor limit.")
+				XCTAssertEqual(obj.results.cursorData.totalRecords, 200, "Object should have found the all the rows just inserted")
+			} catch {
+				XCTFail("findAll error: \(obj.error.string())")
+			}
 		}
 	}
 	
