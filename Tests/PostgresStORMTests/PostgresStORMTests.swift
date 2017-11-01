@@ -251,13 +251,70 @@ class PostgresStORMTests: XCTestCase {
 	Find
 	============================================================================================= */
 	func testFind() {
-		let obj = User()
-
+		// Ensure table is empty
 		do {
-			try obj.find([("firstname", "Joe")])
-			//print("Find Record:  \(obj.id), \(obj.firstname), \(obj.lastname), \(obj.email)")
-		} catch {
-			XCTFail("Find error: \(obj.error.string())")
+			let obj = User()
+			let tableName = obj.table()
+			_ = try? obj.sql("DELETE FROM \(tableName)", params: [])
+		}
+
+		// Doing a `find` with an empty table should yield zero results
+		do {
+			let obj = User()
+			do {
+				try obj.find([("lastname", "Ashpool")])
+				XCTAssertEqual(obj.results.rows.count, 0)
+				XCTAssertEqual(obj.results.cursorData.totalRecords, 0)
+			} catch {
+				XCTFail("Find error: \(obj.error.string())")
+			}
+		}
+
+		// Insert more rows than the StORMCursor().limit
+		for i in 0..<200 {
+			let obj = User()
+			obj.firstname = "Tessier\(i)"
+			obj.lastname = "Ashpool"
+			do {
+				try obj.save { id in obj.id = id as! Int }
+			} catch {
+				XCTFail(String(describing: error))
+			}
+		}
+		for i in 0..<10 {
+			let obj = User()
+			obj.firstname = "Molly\(i)"
+			do {
+				try obj.save { id in obj.id = id as! Int }
+			} catch {
+				XCTFail(String(describing: error))
+			}
+		}
+
+		// Doing the same `find` should now return rows
+		do {
+			let obj = User()
+			do {
+				try obj.find([("lastname", "Ashpool")])
+				let cursorLimit: Int = StORMCursor().limit
+				XCTAssertEqual(obj.results.rows.count, cursorLimit, "Object should have found the all the rows just inserted. Limited by the default cursor limit.")
+				XCTAssertEqual(obj.results.cursorData.totalRecords, 200, "Object should have found the all the rows just inserted")
+			} catch {
+				XCTFail("Find error: \(obj.error.string())")
+			}
+		}
+
+		// Doing the same `find` should now return rows limited by the provided cursor limit
+		do {
+			let obj = User()
+			do {
+				let cursor = StORMCursor(limit: 150, offset: 0)
+				try obj.find(["lastname": "Ashpool"], cursor: cursor)
+				XCTAssertEqual(obj.results.rows.count, cursor.limit, "Object should have found the all the rows just inserted. Limited by the provided cursor limit.")
+				XCTAssertEqual(obj.results.cursorData.totalRecords, 200, "Object should have found the all the rows just inserted")
+			} catch {
+				XCTFail("Find error: \(obj.error.string())")
+			}
 		}
 	}
 	
@@ -265,13 +322,34 @@ class PostgresStORMTests: XCTestCase {
 	FindAll
 	============================================================================================= */
 	func testFindAll() {
-		let obj = User()
-
+		// Ensure table is empty
 		do {
-			try obj.findAll()
-			XCTAssert(obj.results.cursorData.totalRecords > 0, "Object should have found more than zero rows")
-		} catch {
-			XCTFail("findAll error: \(obj.error.string())")
+			let obj = User()
+			let tableName = obj.table()
+			_ = try? obj.sql("DELETE FROM \(tableName)", params: [])
+		}
+
+		// Insert more rows than the StORMCursor().limit
+		for i in 0..<200 {
+			let obj = User()
+			obj.firstname = "Wintermute\(i)"
+			do {
+				try obj.save { id in obj.id = id as! Int }
+			} catch {
+				XCTFail(String(describing: error))
+			}
+		}
+		
+		// Check that all the rows are returned
+		do {
+			let obj = User()
+			do {
+				try obj.findAll()
+				XCTAssertEqual(obj.results.rows.count, 200, "Object should have found the all the rows just inserted. Not limited by the default cursor limit.")
+				XCTAssertEqual(obj.results.cursorData.totalRecords, 200, "Object should have found the all the rows just inserted")
+			} catch {
+				XCTFail("findAll error: \(obj.error.string())")
+			}
 		}
 	}
 	
