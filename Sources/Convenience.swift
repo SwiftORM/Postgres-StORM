@@ -61,7 +61,9 @@ extension PostgresStORM {
 	}
 
 	/// Performs a find on mathing column name/value pairs.
-	public func find(_ data: [(String, Any)]) throws {
+	/// An optional `cursor:StORMCursor` object can be supplied to determine pagination through a larger result set.
+	/// For example, `try find([("username","joe")])` will find all rows that have a username equal to "joe"
+	public func find(_ data: [(String, Any)], cursor: StORMCursor = StORMCursor()) throws {
 		let (idname, _) = firstAsKey()
 
 		var paramsString = [String]()
@@ -72,7 +74,7 @@ extension PostgresStORM {
 		}
 
 		do {
-			try select(whereclause: set.joined(separator: " AND "), params: paramsString, orderby: [idname])
+			try select(whereclause: set.joined(separator: " AND "), params: paramsString, orderby: [idname], cursor: cursor)
 		} catch {
 			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
 			throw error
@@ -82,7 +84,9 @@ extension PostgresStORM {
 
 
 	/// Performs a find on mathing column name/value pairs.
-	public func find(_ data: [String: Any]) throws {
+	/// An optional `cursor:StORMCursor` object can be supplied to determine pagination through a larger result set.
+	/// For example, `try find(["username": "joe"])` will find all rows that have a username equal to "joe"
+	public func find(_ data: [String: Any], cursor: StORMCursor = StORMCursor()) throws {
 		let (idname, _) = firstAsKey()
 
 		var paramsString = [String]()
@@ -95,7 +99,7 @@ extension PostgresStORM {
 		}
 
 		do {
-			try select(whereclause: set.joined(separator: " AND "), params: paramsString, orderby: [idname])
+			try select(whereclause: set.joined(separator: " AND "), params: paramsString, orderby: [idname], cursor: cursor)
 		} catch {
 			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
 			throw error

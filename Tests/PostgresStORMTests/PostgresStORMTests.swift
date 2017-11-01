@@ -303,6 +303,19 @@ class PostgresStORMTests: XCTestCase {
 				XCTFail("Find error: \(obj.error.string())")
 			}
 		}
+
+		// Doing the same `find` should now return rows limited by the provided cursor limit
+		do {
+			let obj = User()
+			do {
+				let cursor = StORMCursor(limit: 150, offset: 0)
+				try obj.find(["lastname": "Ashpool"], cursor: cursor)
+				XCTAssertEqual(obj.results.rows.count, cursor.limit, "Object should have found the all the rows just inserted. Limited by the provided cursor limit.")
+				XCTAssertEqual(obj.results.cursorData.totalRecords, 200, "Object should have found the all the rows just inserted")
+			} catch {
+				XCTFail("Find error: \(obj.error.string())")
+			}
+		}
 	}
 	
 	/* =============================================================================================
