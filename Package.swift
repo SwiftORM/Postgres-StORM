@@ -1,5 +1,5 @@
 // Generated automatically by Perfect Assistant Application
-// Date: 2017-10-03 15:38:08 +0000
+// Date: 2018-02-23 18:59:18 +0000
 import PackageDescription
 let package = Package(
 	name: "PostgresStORM",

@@ -74,3 +74,5 @@ Package.swift.orig
 Package.pins
 Package.resolved
 PADockerfile_build
+.package_lin.pins
+.package_lin.resolved
