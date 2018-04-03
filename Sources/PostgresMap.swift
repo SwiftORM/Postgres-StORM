@@ -18,7 +18,7 @@ public func PostgresMap(_ i: Int) -> String {
 	case 23: return "Int"
 	case 25: return "String"
 	case 114: return "json"
-	case 142: return "xml"
+	//case 142: return "xml"
 	case 700: return "float"
 	case 701: return "float"
 	case 1043: return "String"

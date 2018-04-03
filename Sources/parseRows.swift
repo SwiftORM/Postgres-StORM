@@ -9,7 +9,7 @@
 import StORM
 import PerfectPostgreSQL
 import PerfectLib
-import PerfectXML
+//import PerfectXML
 import Foundation
 
 /// Supplies the parseRows method extending the main class.
@@ -51,9 +51,9 @@ extension PostgresStORM {
 					} catch {
 						params[result.fieldName(index: f)!] = [String:Any]()
 					}
-				case "xml":
-					// will create an XML object
-					params[result.fieldName(index: f)!] = XDocument(fromSource: result.getFieldString(tupleIndex: x, fieldIndex: f)!)
+//				case "xml":
+//					// will create an XML object
+//					params[result.fieldName(index: f)!] = XDocument(fromSource: result.getFieldString(tupleIndex: x, fieldIndex: f)!)
 				case "float":
 					params[result.fieldName(index: f)!] = result.getFieldFloat(tupleIndex: x, fieldIndex: f)
 
