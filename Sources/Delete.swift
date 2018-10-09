@@ -23,7 +23,7 @@ extension PostgresStORM {
 		do {
 			try exec(deleteSQL(self.table(), idName: idName), params: [String(id)])
 		} catch {
-			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			LogFile.error("Error: \(error)", logFile: StORMDebug.location)
 			self.error = StORMError.error("\(error)")
 			throw error
 		}
@@ -36,7 +36,7 @@ extension PostgresStORM {
 		do {
 			try exec(deleteSQL(self.table(), idName: idName), params: [id])
 		} catch {
-			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			LogFile.error("Error: \(error)", logFile: StORMDebug.location)
 			self.error = StORMError.error("\(error)")
 			throw error
 		}
@@ -49,7 +49,7 @@ extension PostgresStORM {
 		do {
 			try exec(deleteSQL(self.table(), idName: idName), params: [id.string])
 		} catch {
-			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			LogFile.error("Error: \(error)", logFile: StORMDebug.location)
 			self.error = StORMError.error("\(error)")
 			throw error
 		}

@@ -44,20 +44,20 @@ open class PostgresConnect: StORMConnect {
 	// Connection String
 	private func connectionString() -> String {
 		let conn = "postgresql://\(credentials.username.stringByEncodingURL):\(credentials.password.stringByEncodingURL)@\(credentials.host.stringByEncodingURL):\(credentials.port)/\(database.stringByEncodingURL)"
-		if StORMdebug { LogFile.info("Postgres conn: \(conn)", logFile: "./StORMlog.txt") }
+		if StORMDebug.active { LogFile.info("Postgres conn: \(conn)", logFile: StORMDebug.location) }
 		return conn
 	}
 
 	/// Opens the connection
-	/// If StORMdebug is true, the connection state will be output to console and to ./StORMlog.txt
+	/// If StORMDebug.active is true, the connection state will be output to console and to StORMDebug.location
 	public func open() {
 		let status = server.connectdb(self.connectionString())
 		if status != .ok {
 			state = .bad
 			resultCode = .error("\(server.errorMessage())")
-			if StORMdebug { LogFile.error("Postgres conn error: \(server.errorMessage())", logFile: "./StORMlog.txt") }
+			if StORMDebug.active { LogFile.error("Postgres conn error: \(server.errorMessage())", logFile: StORMDebug.location) }
 		} else {
-			if StORMdebug { LogFile.info("Postgres conn state: ok", logFile: "./StORMlog.txt") }
+			if StORMDebug.active { LogFile.info("Postgres conn state: ok", logFile: StORMDebug.location) }
 			resultCode = .noError
 		}
 	}
