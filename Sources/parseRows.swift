@@ -61,7 +61,9 @@ extension PostgresStORM {
 					let output = result.getFieldString(tupleIndex: x, fieldIndex: f)
 					let formatter = DateFormatter()
 					formatter.dateFormat = "yyyy/MM/dd hh:mm Z"
-					params[result.fieldName(index: f)!] = formatter.date(from: output!)
+                    if let output = output {
+                        params[result.fieldName(index: f)!] = formatter.date(from: output)
+                    }
 
 					// time
 					// timestamp
