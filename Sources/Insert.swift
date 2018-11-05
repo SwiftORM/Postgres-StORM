@@ -14,7 +14,7 @@ extension PostgresStORM {
 
 	/// Insert function where the suppled data is in [(String, Any)] format.
 	@discardableResult
-	public func insert(_ data: [(String, Any)]) throws -> Any {
+	public func insert(_ data: [(String, Any)]) throws -> Any? {
 
 		var keys = [String]()
 		var vals = [String]()
@@ -31,7 +31,7 @@ extension PostgresStORM {
 	}
 
 	/// Insert function where the suppled data is in [String: Any] format.
-	public func insert(_ data: [String: Any]) throws -> Any {
+	public func insert(_ data: [String: Any]) throws -> Any? {
 
 		var keys = [String]()
 		var vals = [String]()
@@ -47,10 +47,10 @@ extension PostgresStORM {
 			throw StORMError.error("\(error)")
 		}
 	}
-	
+
 
 	/// Insert function where the suppled data is in matching arrays of columns and parameter values.
-	public func insert(cols: [String], params: [Any]) throws -> Any {
+	public func insert(cols: [String], params: [Any]) throws -> Any? {
 		let (idname, _) = firstAsKey()
 		do {
 			return try insert(cols: cols, params: params, idcolumn: idname)
@@ -62,7 +62,7 @@ extension PostgresStORM {
 
 
 	/// Insert function where the suppled data is in matching arrays of columns and parameter values, as well as specifying the name of the id column.
-	public func insert(cols: [String], params: [Any], idcolumn: String) throws -> Any {
+	public func insert(cols: [String], params: [Any], idcolumn: String) throws -> Any? {
 
 		var paramString = [String]()
 		var substString = [String]()
@@ -78,7 +78,11 @@ extension PostgresStORM {
 
 		do {
 			let response = try exec(str, params: paramString)
-			return parseRows(response)[0].data[idcolumn.lowercased()]!
+			let parsedRows = parseRows(response)
+			guard parsedRows.count > 0 else {
+				return nil
+			}
+			return parsedRows[0].data[idcolumn.lowercased()]!
 		} catch {
 			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
 			self.error = StORMError.error("\(error)")
