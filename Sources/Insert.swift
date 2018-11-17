@@ -25,7 +25,7 @@ extension PostgresStORM {
 		do {
 			return try insert(cols: keys, params: vals)
 		} catch {
-			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			LogFile.error("Error: \(error)", logFile: StORMDebug.location)
 			throw StORMError.error("\(error)")
 		}
 	}
@@ -43,7 +43,7 @@ extension PostgresStORM {
 		do {
 			return try insert(cols: keys, params: vals)
 		} catch {
-			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			LogFile.error("Error: \(error)", logFile: StORMDebug.location)
 			throw StORMError.error("\(error)")
 		}
 	}
@@ -55,7 +55,7 @@ extension PostgresStORM {
 		do {
 			return try insert(cols: cols, params: params, idcolumn: idname)
 		} catch {
-			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			LogFile.error("Error: \(error)", logFile: StORMDebug.location)
 			throw StORMError.error("\(error)")
 		}
 	}
@@ -80,7 +80,7 @@ extension PostgresStORM {
 			let response = try exec(str, params: paramString)
 			return parseRows(response)[0].data[idcolumn.lowercased()]!
 		} catch {
-			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			LogFile.error("Error: \(error)", logFile: StORMDebug.location)
 			self.error = StORMError.error("\(error)")
 			throw error
 		}

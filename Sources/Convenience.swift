@@ -20,7 +20,7 @@ extension PostgresStORM {
 		do {
 			try exec(deleteSQL(self.table(), idName: idname.lowercased()), params: [String(describing: idval)])
 		} catch {
-			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			LogFile.error("Error: \(error)", logFile: StORMDebug.location)
 			self.error = StORMError.error("\(error)")
 			throw error
 		}
@@ -32,7 +32,7 @@ extension PostgresStORM {
 		do {
 			try exec(deleteSQL(self.table(), idName: idname.lowercased()), params: [String(describing: id)])
 		} catch {
-			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			LogFile.error("Error: \(error)", logFile: StORMDebug.location)
 			self.error = StORMError.error("\(error)")
 			throw error
 		}
@@ -44,7 +44,7 @@ extension PostgresStORM {
 		do {
 			try select(whereclause: "\"\(idname.lowercased())\" = $1", params: [id], orderby: [])
 		} catch {
-			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			LogFile.error("Error: \(error)", logFile: StORMDebug.location)
 			throw error
 		}
 	}
@@ -55,7 +55,7 @@ extension PostgresStORM {
 		do {
 			try select(whereclause: "\"\(idname.lowercased())\" = $1", params: ["\(idval)"], orderby: [])
 		} catch {
-			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			LogFile.error("Error: \(error)", logFile: StORMDebug.location)
 			throw error
 		}
 	}
@@ -76,7 +76,7 @@ extension PostgresStORM {
 		do {
 			try select(whereclause: set.joined(separator: " AND "), params: paramsString, orderby: [idname], cursor: cursor)
 		} catch {
-			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			LogFile.error("Error: \(error)", logFile: StORMDebug.location)
 			throw error
 		}
 
@@ -101,7 +101,7 @@ extension PostgresStORM {
 		do {
 			try select(whereclause: set.joined(separator: " AND "), params: paramsString, orderby: [idname], cursor: cursor)
 		} catch {
-			LogFile.error("Error: \(error)", logFile: "./StORMlog.txt")
+			LogFile.error("Error: \(error)", logFile: StORMDebug.location)
 			throw error
 		}
 
