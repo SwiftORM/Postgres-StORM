@@ -73,9 +73,9 @@ open class PostgresStORM: StORM, StORMProtocol {
 		let result = thisConnection.server.exec(statement: statement, params: params)
 
 		// set exec message
-		errorMsg = thisConnection.server.errorMessage().trimmingCharacters(in: .whitespacesAndNewlines)
-		if StORMdebug { LogFile.info("Error msg: \(errorMsg)", logFile: "./StORMlog.txt") }
+        errorMsg = thisConnection.server.errorMessage().trimmingCharacters(in: .whitespacesAndNewlines)
 		if isError() {
+            if StORMdebug { LogFile.info("Error msg: \(errorMsg)", logFile: "./StORMlog.txt") }
 			thisConnection.server.close()
 			throw StORMError.error(errorMsg)
 		}
@@ -107,8 +107,8 @@ open class PostgresStORM: StORM, StORMProtocol {
 
 		// set exec message
 		errorMsg = thisConnection.server.errorMessage().trimmingCharacters(in: .whitespacesAndNewlines)
-		if StORMdebug { LogFile.info("Error msg: \(errorMsg)", logFile: "./StORMlog.txt") }
 		if isError() {
+            if StORMdebug { LogFile.info("Error msg: \(errorMsg)", logFile: "./StORMlog.txt") }
 			thisConnection.server.close()
 			throw StORMError.error(errorMsg)
 		}
