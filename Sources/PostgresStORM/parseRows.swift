@@ -25,49 +25,53 @@ extension PostgresStORM {
 			var params = [String: Any]()
 
 			for f in 0..<result.numFields() {
-
+				guard let fieldName = result.fieldName(index: f) else {
+					continue
+				}
 				switch PostgresMap(Int(result.fieldType(index: f)!)) {
 				case "Int":
-					params[result.fieldName(index: f)!] = result.getFieldInt(tupleIndex: x, fieldIndex: f)
+					params[fieldName] = result.getFieldInt(tupleIndex: x, fieldIndex: f)
 				case "Bool":
-					params[result.fieldName(index: f)!] = result.getFieldBool(tupleIndex: x, fieldIndex: f)
+					params[fieldName] = result.getFieldBool(tupleIndex: x, fieldIndex: f)
 				case "String":
-					params[result.fieldName(index: f)!] = result.getFieldString(tupleIndex: x, fieldIndex: f)
+					params[fieldName] = result.getFieldString(tupleIndex: x, fieldIndex: f)
 				case "json":
 					let output = result.getFieldString(tupleIndex: x, fieldIndex: f)
 					do {
                         let decode = try output?.jsonDecode()
                         // Here we are first trying to cast into the traditional json return.  However, when using the json_agg function, it will return an array.  The following considers both cases.
-                        params[result.fieldName(index: f)!] = decode as? [String:Any] ?? decode as? [[String:Any]]
+                        params[fieldName] = decode as? [String:Any] ?? decode as? [[String:Any]]
 					} catch {
-						params[result.fieldName(index: f)!] = [String:Any]()
+						params[fieldName] = [String:Any]()
 					}
 				case "jsonb":
 					let output = result.getFieldString(tupleIndex: x, fieldIndex: f)
 					do {
                         let decode = try output?.jsonDecode()
                         // Here we are first trying to cast into the traditional json return.  However, when using the jsonb_agg function, it will return an array.  The following considers both cases.
-						params[result.fieldName(index: f)!] = decode as? [String:Any] ?? decode as? [[String:Any]]
+						params[fieldName] = decode as? [String:Any] ?? decode as? [[String:Any]]
 					} catch {
-						params[result.fieldName(index: f)!] = [String:Any]()
+						params[fieldName] = [String:Any]()
 					}
 //				case "xml":
 //					// will create an XML object
-//					params[result.fieldName(index: f)!] = XDocument(fromSource: result.getFieldString(tupleIndex: x, fieldIndex: f)!)
+//					params[fieldName] = XDocument(fromSource: result.getFieldString(tupleIndex: x, fieldIndex: f)!)
 				case "float":
-					params[result.fieldName(index: f)!] = result.getFieldFloat(tupleIndex: x, fieldIndex: f)
+					params[fieldName] = result.getFieldFloat(tupleIndex: x, fieldIndex: f)
 
 				case "date":
-					let output = result.getFieldString(tupleIndex: x, fieldIndex: f)
-					let formatter = DateFormatter()
-					formatter.dateFormat = "yyyy/MM/dd hh:mm Z"
-					params[result.fieldName(index: f)!] = formatter.date(from: output!)
-
+					if let output = result.getFieldString(tupleIndex: x, fieldIndex: f) {
+						let formatter = DateFormatter()
+						formatter.dateFormat = "yyyy/MM/dd hh:mm Z"
+						params[fieldName] = formatter.date(from: output)
+					} else {
+						params[fieldName] = nil
+					}
 					// time
 					// timestamp
 					// timestampz
 				default:
-					params[result.fieldName(index: f)!] = result.getFieldString(tupleIndex: x, fieldIndex: f)
+					params[fieldName] = result.getFieldString(tupleIndex: x, fieldIndex: f)
 				}
 
 			}
